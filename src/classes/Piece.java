@@ -20,7 +20,13 @@ public abstract class Piece { // Classe de base sur laquelle vont se baser les t
 	
 	public abstract void seDeplacer(int xArr , int yArr); // Déplacer la pièce sur l'échiquier (si c'est possible)
 
-	
+	protected void bougerPieceSurEchiquier(int xDep , int yDep , int xArr , int yArr) {
+		// Met à jour l'échiquier en faisant bouger la pièce
+		this.ech.getPieces()[xArr][yArr] = this; // Placement du pion sur la case d'arrivée
+		this.ech.getPieces()[xDep][yDep] = null; // Vidange de la case d'origine
+		this.x = xArr; // Mise à jour de la position du pion
+		this.y = yArr;
+	}
 	
 	public int getX() {
 		return x;
