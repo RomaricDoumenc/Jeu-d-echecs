@@ -4,7 +4,7 @@ public abstract class Piece { // Classe de base sur laquelle vont se baser les t
 							  // du jeu d'échecs.
 	
 	protected int x; // Coordonnées de la pièce sur l'échiquier
-	protected int y;
+	protected int y; // x = ligne ; y = colonne
 	
 	protected Couleur coul; // Couleur de la pièce
 	protected Echiquier ech; // Echiquier sur lequel est posé la pièce

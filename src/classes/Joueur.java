@@ -51,6 +51,8 @@ public class Joueur { // un joueur
 		
 	}
 	public void supprimerPiece(Piece p) { // Supprime une pièce à la liste des pièces du joueur.
+		if(this.pieces.contains(p))
+			this.pieces.remove(p);
 		
 	}
 	
