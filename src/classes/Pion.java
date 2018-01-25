@@ -161,6 +161,12 @@ public class Pion extends Piece {
 	public void setaDejBouge(boolean DejaBouge) {
 		this.dejaBouge = DejaBouge;
 	}
+
+	@Override
+	protected boolean trajectoireLibre(int xDep, int yDep, int xArr, int yArr) {
+		// Méthode inutile pour le pion
+		return true;
+	}
 	
 	
 
