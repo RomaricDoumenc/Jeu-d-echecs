@@ -76,8 +76,7 @@ public class Pion extends Piece {
 						// Si oui , capture et suppression de la pièce adverse en question
 						
 						// Suppression de la pièce adverse dans la liste des pièces de l'adversaire
-						Piece pieceASuppr = (Piece) this.ech.getPieces()[xArr][yArr];
-						pieceASuppr.getJ().supprimerPiece(pieceASuppr);
+						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
 						
@@ -118,8 +117,7 @@ public class Pion extends Piece {
 						// Si oui , capture et suppression de la pièce adverse en question
 						
 						// Suppression de la pièce adverse dans la liste des pièces de l'adversaire
-						Piece pieceASuppr = this.ech.getPieces()[xArr][yArr];
-						pieceASuppr.getJ().supprimerPiece(pieceASuppr);
+						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
 						
@@ -140,8 +138,7 @@ public class Pion extends Piece {
 						// Si oui , capture et suppression de la pièce adverse en question
 						
 						// Suppression de la pièce adverse dans la liste des pièces de l'adversaire
-						Piece pieceASuppr = (Piece) this.ech.getPieces()[xArr][yArr];
-						pieceASuppr.getJ().supprimerPiece(pieceASuppr);
+						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
 						

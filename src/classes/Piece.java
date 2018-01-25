@@ -28,6 +28,15 @@ public abstract class Piece { // Classe de base sur laquelle vont se baser les t
 		this.y = yArr;
 	}
 	
+	protected void capturerAdversaire(int xArr , int yArr) {
+		// Capture la pièce adverse situé sur la case passée en paramètre
+		Piece pieceASuppr = this.ech.getPieces()[xArr][yArr];
+		pieceASuppr.getJ().supprimerPiece(pieceASuppr);
+	}
+	
+	protected abstract boolean trajectoireLibre(int xDep , int yDep , int xArr , int yArr);
+	// Vérifie s'il n'y a pas d'autre pièce dans la trajectoire que la pièce va emprunter
+	
 	public int getX() {
 		return x;
 	}

@@ -8,9 +8,21 @@ public class Cavalier extends Piece {
 	}
 
 	@Override
-	public void seDeplacer(int xArr, int yArr) {
-		// TODO Auto-generated method stub
+	public void seDeplacer(int xArr, int yArr) { /* Se déplace en L , le cavalier peut sauter par-dessus
+												  * les autres pièces. */
+	
+		int xDep = this.x;
+		int yDep = this.y;
+		
+		
+		
+		
 
+	}
+
+	@Override
+	protected boolean trajectoireLibre(int xDep, int yDep, int xArr, int yArr) {
+		return true;
 	}
 
 }
