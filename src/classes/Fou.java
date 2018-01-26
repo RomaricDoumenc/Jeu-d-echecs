@@ -54,7 +54,7 @@ public class Fou extends Piece {
 			return true;
 		}
 		else if((xArr > xDep) && (yArr < yDep)) { // En bas à gauche
-			for(i=1 ; i<(xDep-xArr) ; i++)
+			for(i=1 ; i<(xArr-xDep) ; i++)
 				if(this.ech.getPieces()[xDep+i][yDep-i] != null)
 					return false;
 			return true;
