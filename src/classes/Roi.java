@@ -29,7 +29,7 @@ public class Roi extends Piece {
 	}
 	
 	public boolean estEnEchec() { // Indique si le roi est en échec ou non
-		return estEnEchecParFou();
+		return estEnEchecParFou() || estEnEchecParTour();
 		
 	}
 	
@@ -113,6 +113,86 @@ public class Roi extends Piece {
 		return false;
 		
 		
+		
+	}
+	
+	private boolean estEnEchecParTour() {
+		
+		int xRoi = this.x; // Coordonnées du roi
+		int yRoi = this.y;
+		Piece pieceActuelle;
+		
+		// Vérifier en haut
+		int x = xRoi - 1;
+		int y = yRoi;
+		
+		if(x >= 0)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x > 0) && (pieceActuelle == null)) {
+			x--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Tour) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+
+		// Vérifier en bas
+		x = xRoi + 1;
+		y = yRoi;
+		
+		if(x <= 7)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (pieceActuelle == null)) {
+			x++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Tour) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier à gauche
+		x = xRoi;
+		y = yRoi - 1;
+		
+		if(y >= 0)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((y > 0) && (pieceActuelle == null)) {
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Tour) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier à droite
+		x = xRoi;
+		y = yRoi + 1;
+		
+		if(y <= 7)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((y  < 7) && (pieceActuelle == null)) {
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Tour) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		
+		
+		return false;
 		
 	}
 
