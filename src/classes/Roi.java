@@ -29,6 +29,90 @@ public class Roi extends Piece {
 	}
 	
 	public boolean estEnEchec() { // Indique si le roi est en échec ou non
+		return estEnEchecParFou();
+		
+	}
+	
+	private boolean estEnEchecParFou() { // Indique si le roi est en échec par un fou adverse
+		
+		int xRoi = this.x; // Coordonnées du roi
+		int yRoi = this.y;
+		
+		// Vérifier en haut à gauche
+		int x = xRoi - 1;
+		int y = yRoi - 1;
+		
+		
+		Piece pieceActuelle;
+		if((x >= 0) && (y >= 0))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+			
+		while((x > 0) && (y > 0) && (pieceActuelle == null)) {
+			x--;
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Fou) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en bas à droite
+		x = xRoi + 1;
+		y = yRoi + 1;
+		if((x <= 7) && (y <= 7))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (y < 7) && (pieceActuelle == null)) {
+			x++;
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Fou) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en bas à gauche
+		x = xRoi + 1;
+		y = yRoi - 1;
+		if((x <= 7) && (y >= 0))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (y > 0) && (pieceActuelle == null)) {
+			x++;
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Fou) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en haut à droite
+		x = xRoi - 1;
+		y = yRoi + 1;
+		if((x >= 0) && (y <= 7))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x > 0) && (y < 7) && (pieceActuelle == null)) {
+			x--;
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Fou) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+
+		return false;
+		
+		
 		
 	}
 
