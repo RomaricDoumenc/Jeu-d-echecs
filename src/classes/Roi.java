@@ -29,9 +29,483 @@ public class Roi extends Piece {
 	}
 	
 	public boolean estEnEchec() { // Indique si le roi est en échec ou non
+		return estEnEchecParFou() || estEnEchecParTour() || estEnEchecParDame() 
+				|| estEnEchecParPion() || estEnEchecParRoi() || estEnEchecParCavalier();
 		
 	}
+	
+	private boolean estEnEchecParFou() { // Indique si le roi est en échec par un fou adverse
+		
+		int xRoi = this.x; // Coordonnées du roi
+		int yRoi = this.y;
+		
+		// Vérifier en haut à gauche
+		int x = xRoi - 1;
+		int y = yRoi - 1;
+		
+		
+		Piece pieceActuelle;
+		if((x >= 0) && (y >= 0))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+			
+		while((x > 0) && (y > 0) && (pieceActuelle == null)) {
+			x--;
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Fou) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en bas à droite
+		x = xRoi + 1;
+		y = yRoi + 1;
+		if((x <= 7) && (y <= 7))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (y < 7) && (pieceActuelle == null)) {
+			x++;
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Fou) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en bas à gauche
+		x = xRoi + 1;
+		y = yRoi - 1;
+		if((x <= 7) && (y >= 0))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (y > 0) && (pieceActuelle == null)) {
+			x++;
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Fou) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en haut à droite
+		x = xRoi - 1;
+		y = yRoi + 1;
+		if((x >= 0) && (y <= 7))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x > 0) && (y < 7) && (pieceActuelle == null)) {
+			x--;
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Fou) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
 
+		return false;
+		
+		
+		
+	}
+	
+	private boolean estEnEchecParTour() {
+		
+		int xRoi = this.x; // Coordonnées du roi
+		int yRoi = this.y;
+		Piece pieceActuelle;
+		
+		// Vérifier en haut
+		int x = xRoi - 1;
+		int y = yRoi;
+		
+		if(x >= 0)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x > 0) && (pieceActuelle == null)) {
+			x--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Tour) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+
+		// Vérifier en bas
+		x = xRoi + 1;
+		y = yRoi;
+		
+		if(x <= 7)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (pieceActuelle == null)) {
+			x++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Tour) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier à gauche
+		x = xRoi;
+		y = yRoi - 1;
+		
+		if(y >= 0)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((y > 0) && (pieceActuelle == null)) {
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Tour) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier à droite
+		x = xRoi;
+		y = yRoi + 1;
+		
+		if(y <= 7)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((y  < 7) && (pieceActuelle == null)) {
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Tour) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		
+		
+		return false;
+		
+	}
+	private boolean estEnEchecParDame() {
+		
+		int xRoi = this.x; // Coordonnées du roi
+		int yRoi = this.y;
+		Piece pieceActuelle;
+		
+		// Vérifier en haut
+		int x = xRoi - 1;
+		int y = yRoi;
+		
+		if(x >= 0)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x > 0) && (pieceActuelle == null)) {
+			x--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Dame) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+
+		// Vérifier en bas
+		x = xRoi + 1;
+		y = yRoi;
+		
+		if(x <= 7)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (pieceActuelle == null)) {
+			x++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Dame) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier à gauche
+		x = xRoi;
+		y = yRoi - 1;
+		
+		if(y >= 0)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((y > 0) && (pieceActuelle == null)) {
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Dame) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier à droite
+		x = xRoi;
+		y = yRoi + 1;
+		
+		if(y <= 7)
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((y  < 7) && (pieceActuelle == null)) {
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Dame) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		
+		// Vérifier en haut à gauche
+		x = xRoi - 1;
+		y = yRoi - 1;
+		if((x >= 0) && (y >= 0))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+			
+		while((x > 0) && (y > 0) && (pieceActuelle == null)) {
+			x--;
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Dame) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en bas à droite
+		x = xRoi + 1;
+		y = yRoi + 1;
+		if((x <= 7) && (y <= 7))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (y < 7) && (pieceActuelle == null)) {
+			x++;
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Dame) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en bas à gauche
+		x = xRoi + 1;
+		y = yRoi - 1;
+		if((x <= 7) && (y >= 0))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x < 7) && (y > 0) && (pieceActuelle == null)) {
+			x++;
+			y--;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Dame) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		// Vérifier en haut à droite
+		x = xRoi - 1;
+		y = yRoi + 1;
+		if((x >= 0) && (y <= 7))
+			pieceActuelle = this.ech.getPieces()[x][y];
+		else
+			pieceActuelle = null;
+		while((x > 0) && (y < 7) && (pieceActuelle == null)) {
+			x--;
+			y++;
+			pieceActuelle = this.ech.getPieces()[x][y];	
+		}
+		if(pieceActuelle != null) {
+			if((pieceActuelle instanceof Dame) && (pieceActuelle.getCoul() != this.coul))
+				return true;
+		}
+		
+		return false;
+		
+	}
+	
+	private boolean estEnEchecParPion() {
+		
+		 int xRoi = this.x;
+		 int yRoi = this.y;
+		 
+		 if(this.coul == Couleur.BLANC) {
+			 if((x-1 >= 0) && (y-1 >= 0)) {
+				 if(this.ech.getPieces()[x-1][y-1] != null)
+					 if(this.ech.getPieces()[x-1][y-1] instanceof Pion)
+						 if(this.ech.getPieces()[x-1][y-1].getCoul() != this.coul)
+							 return true;
+			 }
+			 if((x-1 >= 0) && (y+1 <=7)) {
+				 if(this.ech.getPieces()[x-1][y+1] != null)
+					 if(this.ech.getPieces()[x-1][y+1] instanceof Pion)
+						 if(this.ech.getPieces()[x-1][y+1].getCoul() != this.coul)
+							 return true;
+				 
+			 }
+			 
+				 
+		 }
+		 if(this.coul == Couleur.NOIR) {
+			 if((x+1 <= 7) && (y+1 <=7)) {
+				 if(this.ech.getPieces()[x+1][y+1] != null)
+					 if(this.ech.getPieces()[x+1][y+1] instanceof Pion)
+						 if(this.ech.getPieces()[x+1][y+1].getCoul() != this.coul)
+							 return true;
+				 
+			 }
+			 if((x+1 <= 7) && (y-1 >= 0)) {
+				 if(this.ech.getPieces()[x+1][y-1] != null)
+					 if(this.ech.getPieces()[x+1][y-1] instanceof Pion)
+						 if(this.ech.getPieces()[x+1][y-1].getCoul() != this.coul)
+							 return true;
+				 
+			 }
+		 }
+		 
+		 return false;
+	}
+	
+	private boolean estEnEchecParRoi() {
+		
+		int xRoi = this.x;
+		int yRoi = this.y;
+		
+		 if((x-1 >= 0) && (y-1 >= 0)) { // Vérifier en haut à gauche
+			 if(this.ech.getPieces()[x-1][y-1] != null)
+				 if(this.ech.getPieces()[x-1][y-1] instanceof Roi)
+					 if(this.ech.getPieces()[x-1][y-1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x-1 >= 0) && (y+1 <=7)) { // Vérifier en haut à droite
+			 if(this.ech.getPieces()[x-1][y+1] != null)
+				 if(this.ech.getPieces()[x-1][y+1] instanceof Roi)
+					 if(this.ech.getPieces()[x-1][y+1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 
+		 if((x+1 <= 7) && (y+1 <=7)) { // Vérifier en bas à droite
+			 if(this.ech.getPieces()[x+1][y+1] != null)
+				 if(this.ech.getPieces()[x+1][y+1] instanceof Roi)
+					 if(this.ech.getPieces()[x+1][y+1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 if((x+1 <= 7) && (y-1 >= 0)) { // Vérifier en bas à gauche
+			 if(this.ech.getPieces()[x+1][y-1] != null)
+				 if(this.ech.getPieces()[x+1][y-1] instanceof Roi)
+					 if(this.ech.getPieces()[x+1][y-1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 if(x+1 <= 7) { // Vérifier en bas
+			 if(this.ech.getPieces()[x+1][y] != null)
+				 if(this.ech.getPieces()[x+1][y] instanceof Roi)
+					 if(this.ech.getPieces()[x+1][y].getCoul() != this.coul)
+						 return true;
+			 
+		 } 
+		 if(x-1 >= 0) { // Vérifier en haut
+			 if(this.ech.getPieces()[x-1][y] != null)
+				 if(this.ech.getPieces()[x-1][y] instanceof Roi)
+					 if(this.ech.getPieces()[x-1][y].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 if(y-1 >= 0) { // Vérifier à gauche
+			 if(this.ech.getPieces()[x][y-1] != null)
+				 if(this.ech.getPieces()[x][y-1] instanceof Roi)
+					 if(this.ech.getPieces()[x][y-1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 if(y+1 <= 7) { // Vérifier à droite
+			 if(this.ech.getPieces()[x][y+1] != null)
+				 if(this.ech.getPieces()[x][y+1] instanceof Roi)
+					 if(this.ech.getPieces()[x][y+1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		return false;
+	}
+
+	private boolean estEnEchecParCavalier() {
+		
+		int xRoi = this.x;
+		int yRoi = this.y;
+		
+		 if((x-1 >= 0) && (y-2 >= 0)) { // Vérifier en haut à gauche
+			 if(this.ech.getPieces()[x-1][y-2] != null)
+				 if(this.ech.getPieces()[x-1][y-2] instanceof Cavalier)
+					 if(this.ech.getPieces()[x-1][y-2].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x-2 >= 0) && (y-1 >= 0)) {
+			 if(this.ech.getPieces()[x-2][y-1] != null)
+				 if(this.ech.getPieces()[x-2][y-1] instanceof Cavalier)
+					 if(this.ech.getPieces()[x-2][y-1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x-2 >= 0) && (y+1 <= 7)) { // Vérifier en haut à droite
+			 if(this.ech.getPieces()[x-2][y+1] != null)
+				 if(this.ech.getPieces()[x-2][y+1] instanceof Cavalier)
+					 if(this.ech.getPieces()[x-2][y+1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x-1 >= 0) && (y+2 <= 7)) {
+			 if(this.ech.getPieces()[x-1][y+2] != null)
+				 if(this.ech.getPieces()[x-1][y+2] instanceof Cavalier)
+					 if(this.ech.getPieces()[x-1][y+2].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x+1 <= 7) && (y+2 <= 7)) { // Vérifier en bas à droite
+			 if(this.ech.getPieces()[x+1][y+2] != null)
+				 if(this.ech.getPieces()[x+1][y+2] instanceof Cavalier)
+					 if(this.ech.getPieces()[x+1][y+2].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x+2 <= 7) && (y+1 <= 7)) { 
+			 if(this.ech.getPieces()[x+2][y+1] != null)
+				 if(this.ech.getPieces()[x+2][y+1] instanceof Cavalier)
+					 if(this.ech.getPieces()[x+2][y+1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x+2 <= 7) && (y-1 >= 0)) { // Vérifier en bas à gauche
+			 if(this.ech.getPieces()[x+2][y-1] != null)
+				 if(this.ech.getPieces()[x+2][y-1] instanceof Cavalier)
+					 if(this.ech.getPieces()[x+2][y-1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x+1 <= 7) && (y-2 >= 0)) { // Vérifier en bas à gauche
+			 if(this.ech.getPieces()[x+1][y-2] != null)
+				 if(this.ech.getPieces()[x+1][y-2] instanceof Cavalier)
+					 if(this.ech.getPieces()[x+1][y-2].getCoul() != this.coul)
+						 return true;
+		 }
+		 
+		 return false;
+	}
 	@Override
 	protected boolean trajectoireLibre(int xDep, int yDep, int xArr, int yArr) {
 		return true;
