@@ -30,7 +30,7 @@ public class Roi extends Piece {
 	
 	public boolean estEnEchec() { // Indique si le roi est en échec ou non
 		return estEnEchecParFou() || estEnEchecParTour() || estEnEchecParDame() 
-				|| estEnEchecParPion() || estEnEchecParRoi();
+				|| estEnEchecParPion() || estEnEchecParRoi() || estEnEchecParCavalier();
 		
 	}
 	
@@ -450,6 +450,62 @@ public class Roi extends Piece {
 		return false;
 	}
 
+	private boolean estEnEchecParCavalier() {
+		
+		int xRoi = this.x;
+		int yRoi = this.y;
+		
+		 if((x-1 >= 0) && (y-2 >= 0)) { // Vérifier en haut à gauche
+			 if(this.ech.getPieces()[x-1][y-2] != null)
+				 if(this.ech.getPieces()[x-1][y-2] instanceof Cavalier)
+					 if(this.ech.getPieces()[x-1][y-2].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x-2 >= 0) && (y-1 >= 0)) {
+			 if(this.ech.getPieces()[x-2][y-1] != null)
+				 if(this.ech.getPieces()[x-2][y-1] instanceof Cavalier)
+					 if(this.ech.getPieces()[x-2][y-1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x-2 >= 0) && (y+1 <= 7)) { // Vérifier en haut à droite
+			 if(this.ech.getPieces()[x-2][y+1] != null)
+				 if(this.ech.getPieces()[x-2][y+1] instanceof Cavalier)
+					 if(this.ech.getPieces()[x-2][y+1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x-1 >= 0) && (y+2 <= 7)) {
+			 if(this.ech.getPieces()[x-1][y+2] != null)
+				 if(this.ech.getPieces()[x-1][y+2] instanceof Cavalier)
+					 if(this.ech.getPieces()[x-1][y+2].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x+1 <= 7) && (y+2 <= 7)) { // Vérifier en bas à droite
+			 if(this.ech.getPieces()[x+1][y+2] != null)
+				 if(this.ech.getPieces()[x+1][y+2] instanceof Cavalier)
+					 if(this.ech.getPieces()[x+1][y+2].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x+2 <= 7) && (y+1 <= 7)) { 
+			 if(this.ech.getPieces()[x+2][y+1] != null)
+				 if(this.ech.getPieces()[x+2][y+1] instanceof Cavalier)
+					 if(this.ech.getPieces()[x+2][y+1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x+2 <= 7) && (y-1 >= 0)) { // Vérifier en bas à gauche
+			 if(this.ech.getPieces()[x+2][y-1] != null)
+				 if(this.ech.getPieces()[x+2][y-1] instanceof Cavalier)
+					 if(this.ech.getPieces()[x+2][y-1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x+1 <= 7) && (y-2 >= 0)) { // Vérifier en bas à gauche
+			 if(this.ech.getPieces()[x+1][y-2] != null)
+				 if(this.ech.getPieces()[x+1][y-2] instanceof Cavalier)
+					 if(this.ech.getPieces()[x+1][y-2].getCoul() != this.coul)
+						 return true;
+		 }
+		 
+		 return false;
+	}
 	@Override
 	protected boolean trajectoireLibre(int xDep, int yDep, int xArr, int yArr) {
 		return true;
