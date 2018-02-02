@@ -29,7 +29,8 @@ public class Roi extends Piece {
 	}
 	
 	public boolean estEnEchec() { // Indique si le roi est en échec ou non
-		return estEnEchecParFou() || estEnEchecParTour() || estEnEchecParDame();
+		return estEnEchecParFou() || estEnEchecParTour() || estEnEchecParDame() 
+				|| estEnEchecParPion() || estEnEchecParRoi();
 		
 	}
 	
@@ -341,6 +342,112 @@ public class Roi extends Piece {
 		
 		return false;
 		
+	}
+	
+	private boolean estEnEchecParPion() {
+		
+		 int xRoi = this.x;
+		 int yRoi = this.y;
+		 
+		 if(this.coul == Couleur.BLANC) {
+			 if((x-1 >= 0) && (y-1 >= 0)) {
+				 if(this.ech.getPieces()[x-1][y-1] != null)
+					 if(this.ech.getPieces()[x-1][y-1] instanceof Pion)
+						 if(this.ech.getPieces()[x-1][y-1].getCoul() != this.coul)
+							 return true;
+			 }
+			 if((x-1 >= 0) && (y+1 <=7)) {
+				 if(this.ech.getPieces()[x-1][y+1] != null)
+					 if(this.ech.getPieces()[x-1][y+1] instanceof Pion)
+						 if(this.ech.getPieces()[x-1][y+1].getCoul() != this.coul)
+							 return true;
+				 
+			 }
+			 
+				 
+		 }
+		 if(this.coul == Couleur.NOIR) {
+			 if((x+1 <= 7) && (y+1 <=7)) {
+				 if(this.ech.getPieces()[x+1][y+1] != null)
+					 if(this.ech.getPieces()[x+1][y+1] instanceof Pion)
+						 if(this.ech.getPieces()[x+1][y+1].getCoul() != this.coul)
+							 return true;
+				 
+			 }
+			 if((x+1 <= 7) && (y-1 >= 0)) {
+				 if(this.ech.getPieces()[x+1][y-1] != null)
+					 if(this.ech.getPieces()[x+1][y-1] instanceof Pion)
+						 if(this.ech.getPieces()[x+1][y-1].getCoul() != this.coul)
+							 return true;
+				 
+			 }
+		 }
+		 
+		 return false;
+	}
+	
+	private boolean estEnEchecParRoi() {
+		
+		int xRoi = this.x;
+		int yRoi = this.y;
+		
+		 if((x-1 >= 0) && (y-1 >= 0)) { // Vérifier en haut à gauche
+			 if(this.ech.getPieces()[x-1][y-1] != null)
+				 if(this.ech.getPieces()[x-1][y-1] instanceof Roi)
+					 if(this.ech.getPieces()[x-1][y-1].getCoul() != this.coul)
+						 return true;
+		 }
+		 if((x-1 >= 0) && (y+1 <=7)) { // Vérifier en haut à droite
+			 if(this.ech.getPieces()[x-1][y+1] != null)
+				 if(this.ech.getPieces()[x-1][y+1] instanceof Roi)
+					 if(this.ech.getPieces()[x-1][y+1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 
+		 if((x+1 <= 7) && (y+1 <=7)) { // Vérifier en bas à droite
+			 if(this.ech.getPieces()[x+1][y+1] != null)
+				 if(this.ech.getPieces()[x+1][y+1] instanceof Roi)
+					 if(this.ech.getPieces()[x+1][y+1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 if((x+1 <= 7) && (y-1 >= 0)) { // Vérifier en bas à gauche
+			 if(this.ech.getPieces()[x+1][y-1] != null)
+				 if(this.ech.getPieces()[x+1][y-1] instanceof Roi)
+					 if(this.ech.getPieces()[x+1][y-1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 if(x+1 <= 7) { // Vérifier en bas
+			 if(this.ech.getPieces()[x+1][y] != null)
+				 if(this.ech.getPieces()[x+1][y] instanceof Roi)
+					 if(this.ech.getPieces()[x+1][y].getCoul() != this.coul)
+						 return true;
+			 
+		 } 
+		 if(x-1 >= 0) { // Vérifier en haut
+			 if(this.ech.getPieces()[x-1][y] != null)
+				 if(this.ech.getPieces()[x-1][y] instanceof Roi)
+					 if(this.ech.getPieces()[x-1][y].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 if(y-1 >= 0) { // Vérifier à gauche
+			 if(this.ech.getPieces()[x][y-1] != null)
+				 if(this.ech.getPieces()[x][y-1] instanceof Roi)
+					 if(this.ech.getPieces()[x][y-1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		 if(y+1 <= 7) { // Vérifier à droite
+			 if(this.ech.getPieces()[x][y+1] != null)
+				 if(this.ech.getPieces()[x][y+1] instanceof Roi)
+					 if(this.ech.getPieces()[x][y+1].getCoul() != this.coul)
+						 return true;
+			 
+		 }
+		return false;
 	}
 
 	@Override
