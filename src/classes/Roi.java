@@ -1,5 +1,7 @@
 package classes;
 
+import java.util.ArrayList;
+
 public class Roi extends Piece {
 
 	public Roi(int x, int y, Couleur coul, Echiquier ech, Joueur j) {
@@ -509,6 +511,50 @@ public class Roi extends Piece {
 	@Override
 	protected boolean trajectoireLibre(int xDep, int yDep, int xArr, int yArr) {
 		return true;
+	}
+	
+	public boolean estEchecEtMat() { // Indique si le roi est échec et mat
+		if (this.estEnEchec() == true) {
+			
+			int i,j;
+			ArrayList<Piece> piecesAllies  = new ArrayList<Piece>(); /* Pièces alliés du roi mis en échec
+																		ainsi que le roi lui-même */
+			Pile pile = new Pile(); // Pile pour mémoriser l'état de départ
+			pile.empiler(this.ech); // On mémorise l'état actuel (état initial)
+			for(i=0 ; i<8 ; i++) { // On cherche sur l'échiquier les pièces de même couleur que le roi (i.e. ses alliés)
+				for(j=0 ; j<8 ; j++) {
+					if(this.ech.getPieces()[i][j] != null)
+						if(this.ech.getPieces()[i][j].coul == this.coul)
+							piecesAllies.add(this.ech.getPieces()[i][j]);
+				}
+			}
+			piecesAllies.add(this); // Ajout du roi lui-même dans ses pièces alliés
+			
+			for(Piece p : piecesAllies) { // Tester tous les mouvements possibles par le joueur mis en échec
+				for(i=0 ; i<8 ; i++) {
+					for(j=0 ; j<8 ; j++) {
+						p.seDeplacer(i, j);
+						if(this.estEnEchec() == false) {
+							pile.depiler(this.ech); // Retour à l'état initial
+							return false; // Pas d'échec et mat
+						}
+						else {
+							pile.depiler(this.ech); // Retour à l'état initial
+							pile.empiler(this.ech); // On mémorise de nouveau l'état initial
+						}
+							
+					}
+				}
+					
+			}
+			
+			return true;
+			
+			
+		}
+		else
+			return false;
+		
 	}
 
 }
