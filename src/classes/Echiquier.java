@@ -21,5 +21,33 @@ public class Echiquier { // Echiquier de 64 cases
 	public void setPieces(Piece[][] pieces) {
 		this.pieces = pieces;
 	}
+	
+	public void mettreAJourListeJoueurs() { /* Met à jour la liste des pièces des joueurs en 
+											 * fonction des pièces restantes sur l'échiquier */
+		int i,j;
+		for(i=0 ; i<8 ; i++) 
+			for(j=0 ; j<8 ; j++) {
+				if (this.pieces[i][j] != null) {
+					if(this.pieces[i][j].getJ().getPieces().contains(this.pieces[i][j]) == false)
+						// Si la pièce n'est pas dans la liste de son joueur
+						// Alors la rajouter à cete liste
+						this.pieces[i][j].getJ().getPieces().add(this.pieces[i][j]);
+				}
+			}
+	}
+	
+	public void mettreAJourCoordonnesPieces() { /* Met à jour les coordonnées contenus
+		 										 * dans les pièces de l'échiquier */
+		
+		int i,j;
+		for(i=0 ; i<8 ; i++) 
+			for(j=0 ; j<8 ; j++) {
+				if (this.pieces[i][j] != null) {
+					this.pieces[i][j].setX(i);
+					this.pieces[i][j].setY(j);
+				}
+			}		
+		
+	}
 
 }
