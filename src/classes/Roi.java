@@ -528,7 +528,6 @@ public class Roi extends Piece {
 							piecesAllies.add(this.ech.getPieces()[i][j]);
 				}
 			}
-			piecesAllies.add(this); // Ajout du roi lui-même dans ses pièces alliés
 			
 			for(Piece p : piecesAllies) { // Tester tous les mouvements possibles par le joueur mis en échec
 				for(i=0 ; i<8 ; i++) {
