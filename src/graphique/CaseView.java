@@ -8,9 +8,11 @@ import classes.Piece;
 import classes.Pion;
 import classes.Roi;
 import classes.Tour;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -80,7 +82,8 @@ public class CaseView extends Parent {  // Représentation graphique d'une case d
 			this.image.setTranslateY(posY);
 			this.getChildren().add(image);
 		}
-			
+
+		
 		
 		
 	}

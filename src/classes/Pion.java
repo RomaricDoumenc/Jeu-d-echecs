@@ -153,6 +153,20 @@ public class Pion extends Piece {
 		
 		
 	}
+	
+	public void resetDejaBouge() { /* Réinitialise le booléen dejaBouge du pion à sa valeur de départ (faux)
+	 								* si ce pion est revenu à sa position de départ suite à l'annulation  
+	 								* d'un ou plusieurs coups. */
+		if(this.coul == Couleur.BLANC) {
+			if(this.x == 6)
+				this.dejaBouge = false;
+		}
+		if(this.coul == Couleur.NOIR) {
+			if(this.x == 1)
+				this.dejaBouge = false;
+		}
+		
+	}
 
 	public boolean isDejaBouge() {
 		return dejaBouge;

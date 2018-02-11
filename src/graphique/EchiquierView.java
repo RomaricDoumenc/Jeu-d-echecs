@@ -20,6 +20,11 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	private int posX; // Coordonnées de la case
 	private int posY;
 	
+	private int nbClics; // Nombre de fois où on a cliqué sur l'échiquier
+	
+	private int xDep,yDep,xArr,yArr; // Coordonnées des cases de départ et d'arrivée de la pièce qu'on veut déplacer
+	
+	
 	private CaseView[][] cases; // Tableau comprenant les cases de l'échiquier
 	
 	public static int largeurEchiquier = 640; // Largeur de l'échiquier (en pixels)
@@ -30,6 +35,7 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	public EchiquierView(int x , int y , Echiquier ech) { /* Initialisation de la vue de l'échiquier 
 										   * en fonction des coordonnées de départ passés en paramètre. */
 		int i,j;
+		this.nbClics = 0;
 		Rectangle fond = new Rectangle();
 		fond.setWidth(largeurEchiquier); // Réglage des dimensions de l'échiquier
 		fond.setHeight(largeurEchiquier);
@@ -79,6 +85,10 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		int i,j;
 		Color marron = new Color(0.655, 0.431, 0.216, 1);
 		Color clair = new Color(0.98, 0.827, 0.565, 1);
+		
+		for(i=0 ; i<8 ; i++)
+			for(j=0 ; j<8 ; j++)
+				this.getChildren().remove(cases[i][j]); // Supression des anciennes cases
 		
 		for(i=0 ; i<8 ; i++) { /* Ecrasement de toutes les cases par des nouvelles
 							    * car il est impossible de modifier les éléments à afficher de chaque case */
@@ -144,6 +154,48 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	public void setCases(CaseView[][] cases) {
 		this.cases = cases;
 	}
+
+	public int getNbClics() {
+		return nbClics;
+	}
+
+	public void setNbClics(int nbClics) {
+		this.nbClics = nbClics;
+	}
+
+	public int getxDep() {
+		return xDep;
+	}
+
+	public void setxDep(int xDep) {
+		this.xDep = xDep;
+	}
+
+	public int getyDep() {
+		return yDep;
+	}
+
+	public void setyDep(int yDep) {
+		this.yDep = yDep;
+	}
+
+	public int getxArr() {
+		return xArr;
+	}
+
+	public void setxArr(int xArr) {
+		this.xArr = xArr;
+	}
+
+	public int getyArr() {
+		return yArr;
+	}
+
+	public void setyArr(int yArr) {
+		this.yArr = yArr;
+	}
+	
+	
 	
 	
 

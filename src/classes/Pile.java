@@ -30,6 +30,15 @@ public class Pile { // Pile contenant l'ensemble des coups joués depuis le début
 			this.coups.remove(dernierCoup);
 			ech.mettreAJourCoordonnesPieces();
 			ech.mettreAJourListeJoueurs();
+			
+			for(i=0 ; i<8 ; i++)
+				for(j=0 ; j<8 ; j++)
+					if(ech.getPieces()[i][j] != null)
+						if(ech.getPieces()[i][j] instanceof Pion) {
+							Pion p = (Pion) ech.getPieces()[i][j];
+							p.resetDejaBouge();
+						}
+							
 		}
 	}
 
