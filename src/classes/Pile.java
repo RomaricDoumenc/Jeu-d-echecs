@@ -41,6 +41,15 @@ public class Pile { // Pile contenant l'ensemble des coups joués depuis le début
 							
 		}
 	}
+	
+	public static boolean coupsEgaux(Piece[][] c1 , Piece[][] c2) { // Indique si 2 coups sont egaux
+		int i,j;
+		for(i=0 ; i<8 ; i++)
+			for(j=0 ; j<8 ; j++)
+				if(c1[i][j] != c2[i][j])
+					return false;
+		return true;
+	}
 
 	public ArrayList<Piece[][]> getCoups() {
 		return coups;

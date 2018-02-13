@@ -4,6 +4,7 @@ import classes.Couleur;
 import classes.Echiquier;
 import classes.Joueur;
 import classes.Pile;
+import classes.Pion;
 import classes.Roi;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -13,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Jeu extends Application { // Boucle principale où se déroulera la partie.
@@ -24,6 +26,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Jeu d'échecs");
+        
         Group root = new Group();
         Scene scene = new Scene(root, 800, 1000, Color.LIGHTBLUE);
         
@@ -49,6 +52,11 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         boutonAnnulation.setTranslateY(view.getPosY() + EchiquierView.largeurEchiquier + 50);
         boutonAnnulation.setText("Annuler un coup");
         boutonAnnulation.setDisable(true);
+        
+        Text etat = new Text();
+        etat.setTranslateX(view.getPosX() + EchiquierView.largeurEchiquier / 2);
+        etat.setTranslateY(view.getPosY() - 10);
+        etat.setText("");
         view.setOnMouseClicked(new EventHandler<MouseEvent>(){ // Déplacement d'une pièce si 2 clics sur l'échiquier
 
 		    public void handle(MouseEvent me){
@@ -64,17 +72,32 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    		view.setyArr((int) (me.getX() / EchiquierView.largeurCase));
 		    		if(ech.getPieces()[view.getxDep()][view.getyDep()] != null) {
 		    			pile.empiler(ech);
-		    			if(pile.getCoups().size() == 0)
-				    		boutonAnnulation.setDisable(true);
-				    	else
-				    		boutonAnnulation.setDisable(false);
+		    			
 		    			
 		    			ech.getPieces()[view.getxDep()][view.getyDep()].seDeplacer(view.getxArr()
 		    				, view.getyArr());
+		    			if(Pile.coupsEgaux(pile.getCoups().get(pile.getCoups().size()-1),
+		    					ech.getPieces()))
+		    				// Si 2 coups de suite concéscutifs sont égaux (c.à.d un déplacement invalide a été joué)
+		    				// Suppression du coup redondant
+		    				pile.depiler(ech);
+		    			
+		    			if(pile.getCoups().size() == 0)
+				    		boutonAnnulation.setDisable(true);
+				    	else
+				    		boutonAnnulation.setDisable(false);// (Ré)activation du bouton si la pile n'est pas vide
+		    			
 		    			if(roiBlanc.estEchecEtMat())
-		    				System.out.println("Les blancs sont échec et mat !");
-		    			if(roiNoir.estEchecEtMat())
-		    				System.out.println("Les noirs sont échec et mat !");		    			
+		    				etat.setText("Les blancs sont échec et mat !");
+		    			else if(roiNoir.estEchecEtMat())
+		    				etat.setText("Les noirs sont échec et mat !");
+		    			else if(roiBlanc.estEnEchec())
+		    				etat.setText("Les blancs sont en échec !");
+		    			else if(roiNoir.estEnEchec())
+		    				etat.setText("Les noirs sont en échec !");
+		    			
+		    			else
+		    				etat.setText("");
 		    		}
 		    		view.rafraichirAffichage(ech);
 		    	}
@@ -90,7 +113,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    public void handle(ActionEvent ae){
 		    	pile.depiler(ech);
 		    	view.rafraichirAffichage(ech);
-		    	if(pile.getCoups().size() == 0)
+		    	if(pile.getCoups().size() == 0) // Désactivation du bouton si la pile est vide
 		    		boutonAnnulation.setDisable(true);
 		    	else
 		    		boutonAnnulation.setDisable(false);
@@ -100,11 +123,15 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         
         root.getChildren().add(view);
         root.getChildren().add(boutonAnnulation);
+        root.getChildren().add(etat);
         
         
         
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        //Pion pion = (Pion) ech.getPieces()[6][0];
+        //pion.promouvoir();
         
     }
 
