@@ -3,6 +3,7 @@ package classes;
 public class Echiquier { // Echiquier de 64 cases
 	
 	private Piece[][] pieces; // tableau à 2 dimensions contenant les pièces posées sur l'échiquier
+	private Couleur joueurActuel; // couleur du joueur actuel
 	
 	public Echiquier() { // Initialisation des cases de l'échiquier à null (échiquier vide)
 		
@@ -11,7 +12,7 @@ public class Echiquier { // Echiquier de 64 cases
 		for(i=0 ; i<8 ; i++) 
 			for(j=0 ; j<8 ; j++)
 				pieces[i][j] = null;
-		
+		joueurActuel = Couleur.BLANC; // Ce sont les blancs qui commencent
 	}
 
 	public Piece[][] getPieces() {
@@ -22,6 +23,15 @@ public class Echiquier { // Echiquier de 64 cases
 		this.pieces = pieces;
 	}
 	
+	
+	public Couleur getJoueurActuel() {
+		return joueurActuel;
+	}
+
+	public void setJoueurActuel(Couleur joueurActuel) {
+		this.joueurActuel = joueurActuel;
+	}
+
 	public void mettreAJourListeJoueurs() { /* Met à jour la liste des pièces des joueurs en 
 											 * fonction des pièces restantes sur l'échiquier */
 		int i,j;
@@ -48,6 +58,13 @@ public class Echiquier { // Echiquier de 64 cases
 				}
 			}		
 		
+	}
+	
+	public void mettreAJourJoueurActuel() {
+		if (this.joueurActuel == Couleur.BLANC)
+			joueurActuel = Couleur.NOIR;
+		else
+			joueurActuel = Couleur.BLANC;
 	}
 
 }

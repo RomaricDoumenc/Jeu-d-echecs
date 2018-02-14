@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class EchiquierView extends Parent { // Représentation graphique d'un échiquier.
 	
@@ -24,6 +26,7 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	
 	private int xDep,yDep,xArr,yArr; // Coordonnées des cases de départ et d'arrivée de la pièce qu'on veut déplacer
 	
+	private Text joueurActuel; // Texte où est affiché le joueur actuel
 	
 	private CaseView[][] cases; // Tableau comprenant les cases de l'échiquier
 	
@@ -37,6 +40,7 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		int i,j;
 		this.nbClics = 0;
 		Rectangle fond = new Rectangle();
+		this.joueurActuel = new Text(ech.getJoueurActuel().toString());
 		fond.setWidth(largeurEchiquier); // Réglage des dimensions de l'échiquier
 		fond.setHeight(largeurEchiquier);
 		
@@ -46,6 +50,11 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		this.posY = y;
 		this.setTranslateX(posX); // Positionnement de la vue
 		this.setTranslateY(posY);
+		Font police = new Font("Arial", 24); // Police du texte du joueur actuel
+		joueurActuel.setFont(police);
+		joueurActuel.setTranslateX(largeurEchiquier / 2); // Positionnement du texte du joueur actuel
+		joueurActuel.setTranslateY(largeurEchiquier + police.getSize());
+		this.getChildren().add(joueurActuel);
 		
 		cases = new CaseView[8][8];
 		
@@ -83,6 +92,11 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	
 	public void rafraichirAffichage(Echiquier ech) { // Actualiser l'affichage de la vue de l'échiquier
 		int i,j;
+		if(ech.getJoueurActuel() != null) // Rafraîchir l'affichage du joueur actuel
+			joueurActuel.setText(ech.getJoueurActuel().toString());
+		else
+			joueurActuel.setText("");
+		
 		Color marron = new Color(0.655, 0.431, 0.216, 1);
 		Color clair = new Color(0.98, 0.827, 0.565, 1);
 		
@@ -194,6 +208,15 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	public void setyArr(int yArr) {
 		this.yArr = yArr;
 	}
+
+	public Text getJoueurActuel() {
+		return joueurActuel;
+	}
+
+	public void setJoueurActuel(Text joueurActuel) {
+		this.joueurActuel = joueurActuel;
+	}
+	
 	
 	
 	
