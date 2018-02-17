@@ -40,7 +40,7 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		int i,j;
 		this.nbClics = 0;
 		Rectangle fond = new Rectangle();
-		this.joueurActuel = new Text(ech.getJoueurActuel().toString());
+		this.joueurActuel = new Text("Joueur actuel : "+ ech.getJoueurActuel().toString());
 		fond.setWidth(largeurEchiquier); // Réglage des dimensions de l'échiquier
 		fond.setHeight(largeurEchiquier);
 		
@@ -93,7 +93,7 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	public void rafraichirAffichage(Echiquier ech) { // Actualiser l'affichage de la vue de l'échiquier
 		int i,j;
 		if(ech.getJoueurActuel() != null) // Rafraîchir l'affichage du joueur actuel
-			joueurActuel.setText(ech.getJoueurActuel().toString());
+			joueurActuel.setText("Joueur actuel : "+ ech.getJoueurActuel().toString());
 		else
 			joueurActuel.setText("");
 		

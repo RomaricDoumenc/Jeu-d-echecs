@@ -5,7 +5,7 @@ import java.io.Serializable;
 public abstract class Piece implements Serializable { // Classe de base sur laquelle vont se baser les types des pièces 
 							  // du jeu d'échecs.
 	
-	public static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	protected int x; // Coordonnées de la pièce sur l'échiquier
 	protected int y; // x = ligne ; y = colonne
 	

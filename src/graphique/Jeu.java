@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import classes.Couleur;
 import classes.Echiquier;
 import classes.Joueur;
+import classes.Piece;
 import classes.Pile;
 import classes.Pion;
 import classes.Roi;
@@ -29,6 +30,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Jeu extends Application { // Boucle principale où se déroulera la partie.
+	
+	public Roi roiBlanc; // Références des 2 rois de la partie
+	public Roi roiNoir;
 
 	public static void main(String[] args) {
         Application.launch(Jeu.class, args);
@@ -55,8 +59,8 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         j2.InitEchiquier(ech);
         
         
-        Roi roiBlanc = (Roi) ech.getPieces()[7][4]; // Mémorisation des références des deux rois
-        Roi roiNoir = (Roi) ech.getPieces()[0][4];
+        roiBlanc = (Roi) ech.getPieces()[7][4]; // Mémorisation des références des deux rois
+        roiNoir = (Roi) ech.getPieces()[0][4];
         
         EchiquierView view = new EchiquierView(80, 80 , ech); // Affichage de l'échiquier
         
@@ -179,6 +183,14 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    public void handle(ActionEvent ae){
 		    	chargerPartie(ech, pile, j1, j2);
 		    	view.rafraichirAffichage(ech);
+		    	for(Piece p : j1.getPieces()) { // Actualisation des références des 2 rois (blanc et noir)
+		    		if(p instanceof Roi)
+		    			roiBlanc = (Roi) p;
+		    	}
+		    	for(Piece p : j2.getPieces()) {
+		    		if(p instanceof Roi)
+		    			roiNoir = (Roi) p;
+		    	}
 		    	if(pile.getCoups().size() == 0)
 		    		boutonAnnulation.setDisable(true); // Désactivation du bouton si la pile est vide
 		    	else
@@ -252,6 +264,24 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     				j2.setCoul(j2ACopier.getCoul());
     				j2.setNom(j2ACopier.getNom());
     				j2.setPieces(j2ACopier.getPieces());
+    				
+    				int i,j;
+    				for(i=0 ; i<8 ; i++)
+    					for(j=0 ; j<8 ; j++) { /* Mise à jour des joueurs et échiquier de chaque pièce
+    											* car les références ont changé */
+    						if(ech.getPieces()[i][j] != null) {
+    							ech.getPieces()[i][j].setEch(ech);
+        						if(ech.getPieces()[i][j].getCoul() == Couleur.BLANC)
+        							ech.getPieces()[i][j].setJ(j1);
+        						else
+        							ech.getPieces()[i][j].setJ(j2);
+    						}
+    						
+    					}
+    						
+    				
+    				ech.mettreAJourCoordonnesPieces();
+    				ech.mettreAJourListeJoueurs();
     				
     				flux.close();
     			}
