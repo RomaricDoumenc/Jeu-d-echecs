@@ -1,5 +1,15 @@
 package graphique;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import classes.Couleur;
 import classes.Echiquier;
 import classes.Joueur;
@@ -50,10 +60,19 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         
         EchiquierView view = new EchiquierView(80, 80 , ech); // Affichage de l'échiquier
         
-        Button boutonAnnulation = new Button(); // Bouton permettant d'annuler un ou plusieurs coups
+        Button boutonAnnulation = new Button("Annuler un coup"); // Bouton permettant d'annuler un ou plusieurs coups
+        Button boutonQuitter = new Button("Quitter"); // Bouton permettant de quitter le jeu
+        Button boutonSauvegarde = new Button("Sauvegarder la partie");
+        Button boutonCharge = new Button("Charger la partie");
+        
         boutonAnnulation.setTranslateX(view.getPosX());
         boutonAnnulation.setTranslateY(view.getPosY() + EchiquierView.largeurEchiquier + 50);
-        boutonAnnulation.setText("Annuler un coup");
+        boutonQuitter.setTranslateX(boutonAnnulation.getTranslateX());
+        boutonQuitter.setTranslateY(boutonAnnulation.getTranslateY() + 150);
+        boutonSauvegarde.setTranslateX(boutonAnnulation.getTranslateX());
+        boutonSauvegarde.setTranslateY(boutonAnnulation.getTranslateY() + 100);
+        boutonCharge.setTranslateX(boutonAnnulation.getTranslateX());
+        boutonCharge.setTranslateY(boutonAnnulation.getTranslateY() + 50);
         boutonAnnulation.setDisable(true);
         
         Text etat = new Text(); // Message indiquant l'état de la partie
@@ -139,8 +158,40 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 
 		});
         
+        boutonQuitter.setOnAction(new EventHandler<ActionEvent>(){
+        	// Actions à effectuer si on presse le bouton "Quitter"
+		    public void handle(ActionEvent ae){
+		    	primaryStage.close(); // Fermeture de la fenêtre
+		    }
+
+		});
+        
+        boutonSauvegarde.setOnAction(new EventHandler<ActionEvent>(){
+        	// Actions à effectuer si on presse le bouton "Sauvegarder"
+		    public void handle(ActionEvent ae){
+		    	sauvegarderPartie(ech, pile, j1, j2);
+		    }
+
+		});
+        
+        boutonCharge.setOnAction(new EventHandler<ActionEvent>(){
+        	// Actions à effectuer si on presse le bouton "Charger"
+		    public void handle(ActionEvent ae){
+		    	chargerPartie(ech, pile, j1, j2);
+		    	view.rafraichirAffichage(ech);
+		    	if(pile.getCoups().size() == 0)
+		    		boutonAnnulation.setDisable(true); // Désactivation du bouton si la pile est vide
+		    	else
+		    		boutonAnnulation.setDisable(false); // (Ré)activation du bouton si la pile n'est pas vide
+		    }
+
+		});
+        
         root.getChildren().add(view);
         root.getChildren().add(boutonAnnulation);
+        root.getChildren().add(boutonSauvegarde);
+        root.getChildren().add(boutonCharge);
+        root.getChildren().add(boutonQuitter);
         root.getChildren().add(etat);
         
         
@@ -151,6 +202,68 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         //Pion pion = (Pion) ech.getPieces()[6][0];
         //pion.promouvoir();
         
+    }
+    
+    public void sauvegarderPartie(Echiquier ech , Pile p , Joueur j1 , Joueur j2) { /* Permet de sauvegarder l'échiquier , la pile de coups et les joueurs
+		 * dans un fichier */
+    	ObjectOutputStream flux;
+    		try {
+    			flux = new ObjectOutputStream(
+    					new BufferedOutputStream(
+    						new FileOutputStream(
+    							new File("partie"))));
+    				flux.writeObject(ech);
+    				flux.writeObject(p);
+    				flux.writeObject(j1);
+    				flux.writeObject(j2);
+    				flux.close();
+    				}
+    		catch (FileNotFoundException e) {
+    			e.printStackTrace();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}  
+    }
+    
+    public void chargerPartie(Echiquier ech , Pile p , Joueur j1 , Joueur j2) { /* Permet de charger le fichier comprenant
+		 * l'échiquier , la pile de coups et les joueurs */
+    		ObjectInputStream flux;
+    			try {
+    				flux = new ObjectInputStream(
+    						new BufferedInputStream(
+    							new FileInputStream(
+    								new File("partie"))));
+    				
+    				Echiquier echACopier = (Echiquier) flux.readObject();
+    				Pile pileACopier = (Pile) flux.readObject();
+    				Joueur j1ACopier = (Joueur) flux.readObject();
+    				Joueur j2ACopier = (Joueur) flux.readObject();
+    				
+    				// Copie à la main des attributs des objets lus vers leurs emplacements de destination
+    				ech.setPieces(echACopier.getPieces());
+    				ech.setJoueurActuel(echACopier.getJoueurActuel());
+    				
+    				p.setCoups(pileACopier.getCoups());
+    				
+    				j1.setCoul(j1ACopier.getCoul());
+    				j1.setNom(j1ACopier.getNom());
+    				j1.setPieces(j1ACopier.getPieces());
+    				
+    				j2.setCoul(j2ACopier.getCoul());
+    				j2.setNom(j2ACopier.getNom());
+    				j2.setPieces(j2ACopier.getPieces());
+    				
+    				flux.close();
+    			}
+    			catch (FileNotFoundException e) {
+    					e.printStackTrace();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    			}  catch (ClassNotFoundException e) {
+
+    				e.printStackTrace();
+
+    			}
     }
 
 }

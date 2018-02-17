@@ -1,7 +1,14 @@
 package classes;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javafx.scene.control.ChoiceDialog;
+
 public class Pion extends Piece {
 
+	private static final long serialVersionUID = -5803497094579220230L;
 	private boolean dejaBouge; // indique si le pion a déjà bougé (utile pour son 1er déplacement)
 	
 	public Pion(int x, int y, Couleur coul, Echiquier ech, Joueur j) {
@@ -166,6 +173,52 @@ public class Pion extends Piece {
 				this.dejaBouge = false;
 		}
 		
+	}
+	
+	public void promouvoir() { // Coup spécial consistant à transformer le pion
+		int xPion = this.x;
+		int yPion = this.y;
+		
+		List<String> choices = new ArrayList<String>();
+		choices.add("Dame");
+		choices.add("Tour");
+		choices.add("Fou");
+		choices.add("Cavalier");
+		
+		ChoiceDialog<String> dialog = new ChoiceDialog<>("Dame", choices);
+		
+		dialog.setTitle("Promotion");
+		dialog.setHeaderText("Vous avez amené votre pion jusqu'au bout de l'échiquier\net votre pion va se transformer en une autre pièce.");
+		dialog.setContentText("Choisissez la nouvelle pièce :");
+		
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+			switch (result.get()) {
+				case "Dame":
+					this.ech.getPieces()[xPion][yPion] = new Dame(xPion, yPion, this.coul, this.ech, this.j);
+					this.j.supprimerPiece(this); // Suppression du pion
+					this.j.ajouterPiece(this.ech.getPieces()[xPion][yPion]); // Ajout de la nouvelle pièce
+					break;
+				case "Tour":
+					this.ech.getPieces()[xPion][yPion] = new Tour(xPion, yPion, this.coul, this.ech, this.j);
+					this.j.supprimerPiece(this); // Suppression du pion
+					this.j.ajouterPiece(this.ech.getPieces()[xPion][yPion]); // Ajout de la nouvelle pièce
+					break;
+				case "Fou":
+					this.ech.getPieces()[xPion][yPion] = new Fou(xPion, yPion, this.coul, this.ech, this.j);
+					this.j.supprimerPiece(this); // Suppression du pion
+					this.j.ajouterPiece(this.ech.getPieces()[xPion][yPion]); // Ajout de la nouvelle pièce
+					break;
+				case "Cavalier":
+					this.ech.getPieces()[xPion][yPion] = new Cavalier(xPion, yPion, this.coul, this.ech, this.j);
+					this.j.supprimerPiece(this); // Suppression du pion
+					this.j.ajouterPiece(this.ech.getPieces()[xPion][yPion]); // Ajout de la nouvelle pièce
+					break;
+					
+				default:
+					break;
+			}
+		}
 	}
 
 	public boolean isDejaBouge() {

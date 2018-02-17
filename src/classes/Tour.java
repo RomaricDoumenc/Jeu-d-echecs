@@ -3,6 +3,8 @@ package classes;
 
 public class Tour extends Piece { /* Se déplace horizontalement et verticalement */
 
+	private static final long serialVersionUID = 1968502700647108722L;
+
 	public Tour(int x, int y, Couleur coul, Echiquier ech, Joueur j) {
 		super(x, y, coul, ech, j);
 		// TODO Auto-generated constructor stub

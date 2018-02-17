@@ -1,8 +1,11 @@
 package classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Pile { // Pile contenant l'ensemble des coups joués depuis le début de la partie.
+public class Pile implements Serializable { // Pile contenant l'ensemble des coups joués depuis le début de la partie.
+	
+	private static final long serialVersionUID = 7066916896549162520L;
 	
 	private ArrayList<Piece[][]> coups; // Liste des coups ( grilles qui représente l'échiquier à un état n donné de la partie.
 

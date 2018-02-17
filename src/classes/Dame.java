@@ -2,6 +2,8 @@ package classes;
 
 public class Dame extends Piece {
 
+	private static final long serialVersionUID = 7880220656661021932L;
+
 	public Dame(int x, int y, Couleur coul, Echiquier ech, Joueur j) {
 		super(x, y, coul, ech, j);
 		// TODO Auto-generated constructor stub

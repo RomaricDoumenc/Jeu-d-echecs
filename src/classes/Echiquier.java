@@ -1,6 +1,12 @@
 package classes;
 
-public class Echiquier { // Echiquier de 64 cases
+import java.io.Serializable;
+
+public class Echiquier implements Serializable { // Echiquier de 64 cases
+	
+	private static final long serialVersionUID = -7386441697609436944L;
+
+	
 	
 	private Piece[][] pieces; // tableau à 2 dimensions contenant les pièces posées sur l'échiquier
 	private Couleur joueurActuel; // couleur du joueur actuel

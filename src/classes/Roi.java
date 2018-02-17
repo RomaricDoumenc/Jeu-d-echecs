@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Roi extends Piece {
 
+	private static final long serialVersionUID = 5111222205294729672L;
+
 	public Roi(int x, int y, Couleur coul, Echiquier ech, Joueur j) {
 		super(x, y, coul, ech, j);
 		// TODO Auto-generated constructor stub
@@ -533,11 +535,11 @@ public class Roi extends Piece {
 				for(i=0 ; i<8 ; i++) {
 					for(j=0 ; j<8 ; j++) {
 						p.seDeplacer(i, j);
-						if(this.estEnEchec() == false) {
+						if(this.estEnEchec() == false) { // Si on trouve un déplacement qui ne met plus en échec le roi
 							pile.depiler(this.ech); // Retour à l'état initial
 							return false; // Pas d'échec et mat
 						}
-						else {
+						else { // Sinon
 							pile.depiler(this.ech); // Retour à l'état initial
 							pile.empiler(this.ech); // On mémorise de nouveau l'état initial
 						}
