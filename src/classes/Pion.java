@@ -175,7 +175,9 @@ public class Pion extends Piece {
 		
 	}
 	
-	public void promouvoir() { // Coup spécial consistant à transformer le pion
+	public void promouvoir() { /* Coup spécial consistant à transformer le pion en une autre pièce
+								* (c.à.d supprimer ce pion de la liste du joueur et ajouter une nouvelle pièce
+								* que le joueur choisira (choix possibles : dame , tour , cavalier , fou))*/
 		int xPion = this.x;
 		int yPion = this.y;
 		
@@ -186,7 +188,7 @@ public class Pion extends Piece {
 		choices.add("Cavalier");
 		
 		ChoiceDialog<String> dialog = new ChoiceDialog<>("Dame", choices);
-		
+
 		dialog.setTitle("Promotion");
 		dialog.setHeaderText("Vous avez amené votre pion jusqu'au bout de l'échiquier\net votre pion va se transformer en une autre pièce.");
 		dialog.setContentText("Choisissez la nouvelle pièce :");
@@ -213,11 +215,15 @@ public class Pion extends Piece {
 					this.ech.getPieces()[xPion][yPion] = new Cavalier(xPion, yPion, this.coul, this.ech, this.j);
 					this.j.supprimerPiece(this); // Suppression du pion
 					this.j.ajouterPiece(this.ech.getPieces()[xPion][yPion]); // Ajout de la nouvelle pièce
-					break;
-					
+					break;	
 				default:
 					break;
 			}
+		}
+		else {
+			this.ech.getPieces()[xPion][yPion] = new Dame(xPion, yPion, this.coul, this.ech, this.j);
+			this.j.supprimerPiece(this); // Suppression du pion
+			this.j.ajouterPiece(this.ech.getPieces()[xPion][yPion]); // Ajout de la nouvelle pièce
 		}
 	}
 

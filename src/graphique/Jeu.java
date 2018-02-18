@@ -23,6 +23,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -42,6 +46,20 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Jeu d'échecs");
         primaryStage.getIcons().add(new Image("file:images/roiBlanc.png"));
+        
+        final Menu menuFichier = new Menu("Fichier");
+        final Menu menuAnnuler = new Menu("Annuler un coup");
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().add(menuFichier);
+        menuBar.getMenus().add(menuAnnuler);
+        SeparatorMenuItem separateur = new SeparatorMenuItem();
+        MenuItem menuCharge = new MenuItem("Charger la partie");
+        MenuItem menuSauvegarde = new MenuItem("Sauvegarder la partie");
+        MenuItem menuQuitter = new MenuItem("Quitter");
+        menuFichier.getItems().add(menuCharge);
+        menuFichier.getItems().add(menuSauvegarde);
+        menuFichier.getItems().add(separateur);
+        menuFichier.getItems().add(menuQuitter);
         
         Group root = new Group();
         Scene scene = new Scene(root, 800, 1000, Color.LIGHTBLUE);
@@ -65,18 +83,9 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         EchiquierView view = new EchiquierView(80, 80 , ech); // Affichage de l'échiquier
         
         Button boutonAnnulation = new Button("Annuler un coup"); // Bouton permettant d'annuler un ou plusieurs coups
-        Button boutonQuitter = new Button("Quitter"); // Bouton permettant de quitter le jeu
-        Button boutonSauvegarde = new Button("Sauvegarder la partie");
-        Button boutonCharge = new Button("Charger la partie");
         
         boutonAnnulation.setTranslateX(view.getPosX());
         boutonAnnulation.setTranslateY(view.getPosY() + EchiquierView.largeurEchiquier + 50);
-        boutonQuitter.setTranslateX(boutonAnnulation.getTranslateX());
-        boutonQuitter.setTranslateY(boutonAnnulation.getTranslateY() + 150);
-        boutonSauvegarde.setTranslateX(boutonAnnulation.getTranslateX());
-        boutonSauvegarde.setTranslateY(boutonAnnulation.getTranslateY() + 100);
-        boutonCharge.setTranslateX(boutonAnnulation.getTranslateX());
-        boutonCharge.setTranslateY(boutonAnnulation.getTranslateY() + 50);
         boutonAnnulation.setDisable(true);
         
         Text etat = new Text(); // Message indiquant l'état de la partie
@@ -109,11 +118,29 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    				/* Si le coup précédent est égal à la situation actuelle 
 		    				 * (c.à.d un déplacement invalide a été joué) , 
 		    				 * ou bien que le déplacement amène à une situation d'échec dans son propre camp , alors
-		    				 * Suppression du coup redondant */
+		    				 * Suppression du coup redondant ou interdit */
 		    				pile.depiler(ech);
 		    				// Sinon mise à jour du joueur actuel
-		    			else 
+		    			else {
+		    				int i;
+		    				for(i=0 ; i<8 ; i++) { /* Si un pion blanc se trouve sur la rangée tout en haut ou
+		    					                    * si un pion noir se trouve sur la rangée tout en bas
+		    					                    * alors promotion de ce pion */
+		    					if ( (ech.getPieces()[0][i] != null) && (ech.getPieces()[0][i] instanceof Pion)
+		    						&& (ech.getPieces()[0][i].getCoul() == Couleur.BLANC) ) {
+		    						Pion p = (Pion) ech.getPieces()[0][i];
+		    						p.promouvoir();
+		    						view.rafraichirAffichage(ech);
+		    					}
+		    					if ( (ech.getPieces()[7][i] != null) && (ech.getPieces()[7][i] instanceof Pion)
+			    						&& (ech.getPieces()[7][i].getCoul() == Couleur.NOIR) ) {
+			    						Pion p = (Pion) ech.getPieces()[7][i];
+			    						p.promouvoir();
+			    						view.rafraichirAffichage(ech);
+			    					}
+		    				}
 		    				ech.mettreAJourJoueurActuel();
+		    			}
 		    			
 		    			if(pile.getCoups().size() == 0)
 				    		boutonAnnulation.setDisable(true);
@@ -162,7 +189,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 
 		});
         
-        boutonQuitter.setOnAction(new EventHandler<ActionEvent>(){
+        menuQuitter.setOnAction(new EventHandler<ActionEvent>(){
         	// Actions à effectuer si on presse le bouton "Quitter"
 		    public void handle(ActionEvent ae){
 		    	primaryStage.close(); // Fermeture de la fenêtre
@@ -170,7 +197,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 
 		});
         
-        boutonSauvegarde.setOnAction(new EventHandler<ActionEvent>(){
+        menuSauvegarde.setOnAction(new EventHandler<ActionEvent>(){
         	// Actions à effectuer si on presse le bouton "Sauvegarder"
 		    public void handle(ActionEvent ae){
 		    	sauvegarderPartie(ech, pile, j1, j2);
@@ -178,7 +205,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 
 		});
         
-        boutonCharge.setOnAction(new EventHandler<ActionEvent>(){
+        menuCharge.setOnAction(new EventHandler<ActionEvent>(){
         	// Actions à effectuer si on presse le bouton "Charger"
 		    public void handle(ActionEvent ae){
 		    	chargerPartie(ech, pile, j1, j2);
@@ -201,9 +228,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         
         root.getChildren().add(view);
         root.getChildren().add(boutonAnnulation);
-        root.getChildren().add(boutonSauvegarde);
-        root.getChildren().add(boutonCharge);
-        root.getChildren().add(boutonQuitter);
+        root.getChildren().add(menuBar);
         root.getChildren().add(etat);
         
         
