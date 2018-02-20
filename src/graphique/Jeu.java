@@ -20,6 +20,7 @@ import classes.Roi;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -47,6 +48,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         primaryStage.setTitle("Jeu d'échecs");
         primaryStage.getIcons().add(new Image("file:images/roiBlanc.png"));
         
+        
         final Menu menuFichier = new Menu("Fichier");
         final Menu menuAnnuler = new Menu("Annuler un coup");
         MenuBar menuBar = new MenuBar();
@@ -60,6 +62,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         menuFichier.getItems().add(menuSauvegarde);
         menuFichier.getItems().add(separateur);
         menuFichier.getItems().add(menuQuitter);
+        
         
         Group root = new Group();
         Scene scene = new Scene(root, 800, 1000, Color.LIGHTBLUE);
@@ -122,6 +125,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    				pile.depiler(ech);
 		    				// Sinon mise à jour du joueur actuel
 		    			else {
+		    				ech.mettreAJourJoueurActuel();
 		    				int i;
 		    				for(i=0 ; i<8 ; i++) { /* Si un pion blanc se trouve sur la rangée tout en haut ou
 		    					                    * si un pion noir se trouve sur la rangée tout en bas
@@ -139,7 +143,13 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 			    						view.rafraichirAffichage(ech);
 			    					}
 		    				}
-		    				ech.mettreAJourJoueurActuel();
+		    				if(ech.insufficanceMaterielle() == true) {
+    							System.out.println("Insufficance matérielle");
+    						}
+		    				if(ech.pat() == true) {
+		    					System.out.println("Pat");
+		    				}
+		    				
 		    			}
 		    			
 		    			if(pile.getCoups().size() == 0)

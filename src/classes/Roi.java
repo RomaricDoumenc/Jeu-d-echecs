@@ -523,7 +523,7 @@ public class Roi extends Piece {
 																		ainsi que le roi lui-même */
 			Pile pile = new Pile(); // Pile pour mémoriser l'état de départ
 			pile.empiler(this.ech); // On mémorise l'état actuel (état initial)
-			for(i=0 ; i<8 ; i++) { // On cherche sur l'échiquier les pièces de même couleur que le roi (i.e. ses alliés)
+			for(i=0 ; i<8 ; i++) { // On cherche sur l'échiquier les pièces de même couleur que le roi (c.à.d ses alliés)
 				for(j=0 ; j<8 ; j++) {
 					if(this.ech.getPieces()[i][j] != null)
 						if(this.ech.getPieces()[i][j].coul == this.coul)
@@ -534,14 +534,14 @@ public class Roi extends Piece {
 			for(Piece p : piecesAllies) { // Tester tous les mouvements possibles par le joueur mis en échec
 				for(i=0 ; i<8 ; i++) {
 					for(j=0 ; j<8 ; j++) {
-						p.seDeplacer(i, j);
+						p.seDeplacer(i, j); // On teste le mouvement
 						if(this.estEnEchec() == false) { // Si on trouve un déplacement qui ne met plus en échec le roi
 							pile.depiler(this.ech); // Retour à l'état initial
 							return false; // Pas d'échec et mat
 						}
 						else { // Sinon
 							pile.depiler(this.ech); // Retour à l'état initial
-							pile.empiler(this.ech); // On mémorise de nouveau l'état initial
+							pile.empiler(this.ech); // On mémorise de nouveau l'état initial , passage à la situation suivante ou à la pièce alliée suivante
 						}
 							
 					}
@@ -549,12 +549,55 @@ public class Roi extends Piece {
 					
 			}
 			
-			return true;
+			return true; // Tous les mouvements testés ne peuvent palier l'échec du roi , le roi est échec et mat !
 			
 			
 		}
 		else
-			return false;
+			return false; // Le roi n'est pas en échec , il n'est donc pas échec et mat
+		
+	}
+	
+	public boolean estBloque() { // Indique si le roi est bloqué (c.à.d le roi ne peut se déplacer sans être mis en échec , et qu'il n'est pas en échec au départ)
+		if (this.estEnEchec() == false) {
+			
+			int i,j;
+			ArrayList<Piece> piecesAllies  = new ArrayList<Piece>(); /* Pièces alliés du roi mis en échec
+																		ainsi que le roi lui-même */
+			Pile pile = new Pile(); // Pile pour mémoriser l'état de départ
+			pile.empiler(this.ech); // On mémorise l'état actuel (état initial)
+			piecesAllies.add(this);
+			
+			int xDep = this.x;
+			int yDep = this.y;
+			
+			for(Piece p : piecesAllies) { // Tester tous les mouvements possibles par le roi
+				for(i=0 ; i<8 ; i++) {
+					for(j=0 ; j<8 ; j++) {
+						if((xDep != i) || (yDep != j)) { // On ne teste pas le déplacement sur lui-même
+							p.seDeplacer(i, j); // On teste le mouvement
+							if(this.estEnEchec() == false) { // Si on trouve un déplacement qui ne met plus en échec le roi
+								pile.depiler(this.ech); // Retour à l'état initial
+								return false; // Pas d'échec et mat
+							}
+							else { // Sinon
+								pile.depiler(this.ech); // Retour à l'état initial
+								pile.empiler(this.ech); // On mémorise de nouveau l'état initial , passage à la situation suivante ou à la pièce alliée suivante
+							}
+						}
+						
+							
+					}
+				}
+					
+			}
+			
+			return true; // Tous les mouvements testés ne peuvent palier l'échec du roi , le roi est bloqué			
+			
+		}
+		else
+			return false; // Le roi n'est pas en échec , il n'est donc pas échec et mat
+		
 		
 	}
 

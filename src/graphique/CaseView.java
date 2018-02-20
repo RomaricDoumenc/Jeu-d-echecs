@@ -81,6 +81,7 @@ public class CaseView extends Parent {  // Représentation graphique d'une case d
 			this.image.setTranslateX(posX);
 			this.image.setTranslateY(posY);
 			this.getChildren().add(image);
+			
 		}
 
 		
