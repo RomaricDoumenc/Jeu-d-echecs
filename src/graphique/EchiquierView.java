@@ -28,6 +28,9 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	
 	private Text joueurActuel; // Texte où est affiché le joueur actuel
 	
+	private Text[] numLigne; // Textes où seront affiché les numéros, de lignes (de 1 à 8 , de bas en haut)
+	private Text[] numColonne; // Textes où seront affiché les numéros, de lignes (de A à H , de gauche à droite)
+	
 	private CaseView[][] cases; // Tableau comprenant les cases de l'échiquier
 	
 	public static int largeurEchiquier = 640; // Largeur de l'échiquier (en pixels)
@@ -43,6 +46,23 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		this.joueurActuel = new Text("Joueur actuel : "+ ech.getJoueurActuel().toString());
 		fond.setWidth(largeurEchiquier); // Réglage des dimensions de l'échiquier
 		fond.setHeight(largeurEchiquier);
+		
+		this.numLigne = new Text[8];
+		this.numColonne = new Text[8];
+		
+		for(i=0 ; i<8 ; i++) {
+			numLigne[i] = new Text(Integer.toString(8 - i)); // Initialisation des textes de 1 à 8
+		}
+		
+		numColonne[0] = new Text("A");
+		numColonne[1] = new Text("B");
+		numColonne[2] = new Text("C");
+		numColonne[3] = new Text("D");
+		numColonne[4] = new Text("E");
+		numColonne[5] = new Text("F");
+		numColonne[6] = new Text("G");
+		numColonne[7] = new Text("H");
+			
 		
 		
 		
@@ -86,6 +106,17 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 				}
 			}
 			
+		}
+		for(i=0 ; i<8 ; i++) {
+			numLigne[i].setTranslateX(-police.getSize());
+			numLigne[i].setTranslateY(largeurCase * i + largeurCase / 2);
+			numLigne[i].setFont(police);
+			this.getChildren().add(numLigne[i]);
+			
+			numColonne[i].setTranslateX(largeurCase * i + largeurCase / 2);
+			numColonne[i].setTranslateY(-police.getSize() / 2);
+			numColonne[i].setFont(police);
+			this.getChildren().add(numColonne[i]);
 		}
 			
 	}

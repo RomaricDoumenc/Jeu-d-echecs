@@ -25,9 +25,9 @@ public abstract class Piece implements Serializable { // Classe de base sur laqu
 
 	protected void bougerPieceSurEchiquier(int xDep , int yDep , int xArr , int yArr) {
 		// Met à jour l'échiquier en faisant bouger la pièce
-		this.ech.getPieces()[xArr][yArr] = this; // Placement du pion sur la case d'arrivée
+		this.ech.getPieces()[xArr][yArr] = this; // Placement de la pièce sur la case d'arrivée
 		this.ech.getPieces()[xDep][yDep] = null; // Vidange de la case d'origine
-		this.x = xArr; // Mise à jour de la position du pion
+		this.x = xArr; // Mise à jour de la position de la pièce
 		this.y = yArr;
 	}
 	

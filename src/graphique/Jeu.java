@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Optional;
 
 import classes.Couleur;
 import classes.Echiquier;
@@ -23,12 +24,16 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -50,10 +55,9 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         
         
         final Menu menuFichier = new Menu("Fichier");
-        final Menu menuAnnuler = new Menu("Annuler un coup");
+        //final Menu menuAnnuler = new Menu("Annuler un coup");
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().add(menuFichier);
-        menuBar.getMenus().add(menuAnnuler);
         SeparatorMenuItem separateur = new SeparatorMenuItem();
         MenuItem menuCharge = new MenuItem("Charger la partie");
         MenuItem menuSauvegarde = new MenuItem("Sauvegarder la partie");
@@ -63,11 +67,15 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         menuFichier.getItems().add(separateur);
         menuFichier.getItems().add(menuQuitter);
         
+       
+        
         
         Group root = new Group();
         Scene scene = new Scene(root, 800, 1000, Color.LIGHTBLUE);
         
-       
+        menuBar.setMinWidth(scene.getWidth());
+        
+        
         Echiquier ech = new Echiquier(); // Echiquier de la partie
         Joueur j1 = new Joueur("blanc", Couleur.BLANC, ech); // Joueurs de la partie
         Joueur j2 = new Joueur("noir", Couleur.NOIR, ech);
@@ -84,6 +92,8 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         roiNoir = (Roi) ech.getPieces()[0][4];
         
         EchiquierView view = new EchiquierView(80, 80 , ech); // Affichage de l'échiquier
+        
+        view.getStyleClass().add("view");
         
         Button boutonAnnulation = new Button("Annuler un coup"); // Bouton permettant d'annuler un ou plusieurs coups
         
@@ -158,12 +168,12 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 				    		boutonAnnulation.setDisable(false);// (Ré)activation du bouton si la pile n'est pas vide
 		    			
 		    			if(roiBlanc.estEchecEtMat()) {
-		    				etat.setText("Les blancs sont échec et mat !");
+		    				afficherEchecEtMat();
 		    				ech.setJoueurActuel(null); // Plus de joueur actuel , déplacements de pièces désactivé
 		    				boutonAnnulation.setDisable(true); // Désactivation du bouton d'annulation , la partie est terminée
 		    			}
 		    			else if(roiNoir.estEchecEtMat()) {
-		    				etat.setText("Les noirs sont échec et mat !");
+		    				afficherEchecEtMat();
 		    				ech.setJoueurActuel(null); // Plus de joueur actuel , déplacements de pièces désactivé
 		    				boutonAnnulation.setDisable(true); // Désactivation du bouton d'annulation , la partie est terminée
 		    			}
@@ -253,12 +263,23 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     
     public void sauvegarderPartie(Echiquier ech , Pile p , Joueur j1 , Joueur j2) { /* Permet de sauvegarder l'échiquier , la pile de coups et les joueurs
 		 * dans un fichier */
-    	ObjectOutputStream flux;
+    	
+    	TextInputDialog dialog = new TextInputDialog("");
+    	dialog.setTitle("Sauvegarder la partie");
+    	//dialog.setHeaderText("Look, a Text Input Dialog");
+    	dialog.setContentText("Entrez le nom du fichier : ");
+
+ 
+    	Optional<String> result = dialog.showAndWait();
+    	if (result.isPresent()){ /* Si l'utilisateur a saisi le nom du fichier , alors création de ce fichier (s'il n'existe pas)
+    								et sauvegarde des objets(échiquier , pièces , joueurs et pile) */
+    		ObjectOutputStream flux;
+    		String nomFichier = "sauvegardes/" + result.get();
     		try {
     			flux = new ObjectOutputStream(
     					new BufferedOutputStream(
     						new FileOutputStream(
-    							new File("partie"))));
+    							new File(nomFichier))));
     				flux.writeObject(ech);
     				flux.writeObject(p);
     				flux.writeObject(j1);
@@ -269,66 +290,97 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     			e.printStackTrace();
     		} catch (IOException e) {
     			e.printStackTrace();
-    		}  
+    		}
+    	}
+    	  
     }
     
     public void chargerPartie(Echiquier ech , Pile p , Joueur j1 , Joueur j2) { /* Permet de charger le fichier comprenant
 		 * l'échiquier , la pile de coups et les joueurs */
+    	
+    	TextInputDialog dialog = new TextInputDialog("");
+    	dialog.setTitle("Charger une partie");
+    	//dialog.setHeaderText("Look, a Text Input Dialog");
+    	dialog.setContentText("Entrez le nom du fichier : ");
+
+ 
+    	Optional<String> result = dialog.showAndWait();
+    	if(result.isPresent()) {
     		ObjectInputStream flux;
-    			try {
-    				flux = new ObjectInputStream(
-    						new BufferedInputStream(
-    							new FileInputStream(
-    								new File("partie"))));
-    				
-    				Echiquier echACopier = (Echiquier) flux.readObject();
-    				Pile pileACopier = (Pile) flux.readObject();
-    				Joueur j1ACopier = (Joueur) flux.readObject();
-    				Joueur j2ACopier = (Joueur) flux.readObject();
-    				
-    				// Copie à la main des attributs des objets lus vers leurs emplacements de destination
-    				ech.setPieces(echACopier.getPieces());
-    				ech.setJoueurActuel(echACopier.getJoueurActuel());
-    				
-    				p.setCoups(pileACopier.getCoups());
-    				
-    				j1.setCoul(j1ACopier.getCoul());
-    				j1.setNom(j1ACopier.getNom());
-    				j1.setPieces(j1ACopier.getPieces());
-    				
-    				j2.setCoul(j2ACopier.getCoul());
-    				j2.setNom(j2ACopier.getNom());
-    				j2.setPieces(j2ACopier.getPieces());
-    				
-    				int i,j;
-    				for(i=0 ; i<8 ; i++)
-    					for(j=0 ; j<8 ; j++) { /* Mise à jour des joueurs et échiquier de chaque pièce
-    											* car les références ont changé */
-    						if(ech.getPieces()[i][j] != null) {
-    							ech.getPieces()[i][j].setEch(ech);
-        						if(ech.getPieces()[i][j].getCoul() == Couleur.BLANC)
-        							ech.getPieces()[i][j].setJ(j1);
-        						else
-        							ech.getPieces()[i][j].setJ(j2);
-    						}
-    						
-    					}
-    						
-    				
-    				ech.mettreAJourCoordonnesPieces();
-    				ech.mettreAJourListeJoueurs();
-    				
-    				flux.close();
-    			}
-    			catch (FileNotFoundException e) {
-    					e.printStackTrace();
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			}  catch (ClassNotFoundException e) {
+    		String nomFichier = "sauvegardes/" + result.get();
+			try {
+				flux = new ObjectInputStream(
+						new BufferedInputStream(
+							new FileInputStream(
+								new File(nomFichier))));
+				
+				Echiquier echACopier = (Echiquier) flux.readObject();
+				Pile pileACopier = (Pile) flux.readObject();
+				Joueur j1ACopier = (Joueur) flux.readObject();
+				Joueur j2ACopier = (Joueur) flux.readObject();
+				
+				// Copie à la main des attributs des objets lus vers leurs emplacements de destination
+				ech.setPieces(echACopier.getPieces());
+				ech.setJoueurActuel(echACopier.getJoueurActuel());
+				
+				p.setCoups(pileACopier.getCoups());
+				
+				j1.setCoul(j1ACopier.getCoul());
+				j1.setNom(j1ACopier.getNom());
+				j1.setPieces(j1ACopier.getPieces());
+				
+				j2.setCoul(j2ACopier.getCoul());
+				j2.setNom(j2ACopier.getNom());
+				j2.setPieces(j2ACopier.getPieces());
+				
+				int i,j;
+				for(i=0 ; i<8 ; i++)
+					for(j=0 ; j<8 ; j++) { /* Mise à jour des joueurs et échiquier de chaque pièce
+											* car les références ont changé */
+						if(ech.getPieces()[i][j] != null) {
+							ech.getPieces()[i][j].setEch(ech);
+    						if(ech.getPieces()[i][j].getCoul() == Couleur.BLANC)
+    							ech.getPieces()[i][j].setJ(j1);
+    						else
+    							ech.getPieces()[i][j].setJ(j2);
+						}
+						
+					}
+						
+				
+				ech.mettreAJourCoordonnesPieces();
+				ech.mettreAJourListeJoueurs();
+				
+				flux.close();
+			}
+			catch (FileNotFoundException e) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Erreur");
+				
+				
+				alert.setContentText("Le fichier \"" + nomFichier + "\" est introuvable.");
 
-    				e.printStackTrace();
+				alert.showAndWait();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}  catch (ClassNotFoundException e) {
 
-    			}
+				e.printStackTrace();
+
+			}
+    	}
+    		
+    }
+    
+    public void afficherEchecEtMat() {
+    	Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Echec et mat");
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(new Image("file:images/roiBlanc.png"));
+		alert.setContentText("Echec et mat !");
+
+		alert.showAndWait();
     }
 
 }

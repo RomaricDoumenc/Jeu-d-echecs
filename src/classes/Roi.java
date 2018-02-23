@@ -16,7 +16,7 @@ public class Roi extends Piece {
 		int xDep = this.x;
 		int yDep = this.y;
 		
-		if((Math.abs(xDep - xArr) == 0) || (Math.abs(xDep - xArr) == 1))
+		if((Math.abs(xDep - xArr) == 0) || (Math.abs(xDep - xArr) == 1)) {
 			if((Math.abs(yDep - yArr) == 0) || (Math.abs(yDep - yArr) == 1))
 				if (trajectoireLibre(xDep, yDep, xArr, yArr) == true) { // Pas de pièce sur la trajectoire du fou ?
 					if(this.ech.getPieces()[xArr][yArr] == null) // Case libre ?
@@ -27,6 +27,7 @@ public class Roi extends Piece {
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
 					}
 				}
+		}
 		
 		
 
@@ -599,6 +600,28 @@ public class Roi extends Piece {
 			return false; // Le roi n'est pas en échec , il n'est donc pas échec et mat
 		
 		
+	}
+	
+	public void roquer(Tour t) {
+		if(this.coul == Couleur.BLANC) {
+			if((this.x == 7) && (this.y == 4)) {
+				if(t.getX() == 7) {
+					if((t.getY() == 0)) {
+						this.bougerPieceSurEchiquier(x, y, x, y - 2);
+						t.bougerPieceSurEchiquier(t.getX(), t.getY(), 
+								t.getX(), t.getY() + 3);
+					}
+					if((t.getY() == 7)) {
+						this.bougerPieceSurEchiquier(x, y, x, y + 2);
+						t.bougerPieceSurEchiquier(t.getX(), t.getY(), 
+								t.getX(), t.getY() - 2);
+					}
+				}
+
+				
+			}
+			
+		}
 	}
 
 }

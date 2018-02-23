@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 public class Pion extends Piece {
 
@@ -188,7 +190,9 @@ public class Pion extends Piece {
 		choices.add("Cavalier");
 		
 		ChoiceDialog<String> dialog = new ChoiceDialog<>("Dame", choices);
-
+		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(new Image("file:images/pionBlanc.png"));
+		
 		dialog.setTitle("Promotion");
 		dialog.setHeaderText("Vous avez amené votre pion jusqu'au bout de l'échiquier\net votre pion va se transformer en une autre pièce.");
 		dialog.setContentText("Choisissez la nouvelle pièce :");

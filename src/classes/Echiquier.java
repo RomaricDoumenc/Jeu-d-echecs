@@ -113,8 +113,7 @@ public class Echiquier implements Serializable { // Echiquier de 64 cases
 		 																			 ou Roi + Cavalier contre Roi + Cavalier , impossible de mater */
 			return true;
 		if((nbCavaliersBlancs + nbCavaliersNoirs == 0) && (nbFousBlancs + nbFousNoirs == 2))
-			if((nbFousBlancs == 1) &&
-					(nbFousNoirs == 1))
+			if((nbFousBlancs == 1) && (nbFousNoirs == 1))
 				return true; // Roi + Fou contre Roi + Fou , impossible de mater
 			else
 				return false; // On peut mater avec Roi + 2 Fous contre Roi , pas d'insuffisance matérielle
