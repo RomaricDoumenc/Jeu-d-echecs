@@ -93,8 +93,6 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         
         EchiquierView view = new EchiquierView(80, 80 , ech); // Affichage de l'échiquier
         
-        view.getStyleClass().add("view");
-        
         Button boutonAnnulation = new Button("Annuler un coup"); // Bouton permettant d'annuler un ou plusieurs coups
         
         boutonAnnulation.setTranslateX(view.getPosX());
@@ -156,9 +154,9 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    				if(ech.insufficanceMaterielle() == true) {
     							System.out.println("Insufficance matérielle");
     						}
-		    				if(ech.pat() == true) {
-		    					System.out.println("Pat");
-		    				}
+		    				//if(ech.pat() == true) {
+		    				//	System.out.println("Pat");
+		    				//}
 		    				
 		    			}
 		    			

@@ -16,7 +16,9 @@ public class Roi extends Piece {
 		int xDep = this.x;
 		int yDep = this.y;
 		
-		if((Math.abs(xDep - xArr) == 0) || (Math.abs(xDep - xArr) == 1)) {
+		if((Math.abs(yDep-yArr) == 2) && (xDep-xArr == 0))
+			this.roquer(yArr);
+		else if((Math.abs(xDep - xArr) == 0) || (Math.abs(xDep - xArr) == 1)) {
 			if((Math.abs(yDep - yArr) == 0) || (Math.abs(yDep - yArr) == 1))
 				if (trajectoireLibre(xDep, yDep, xArr, yArr) == true) { // Pas de pièce sur la trajectoire du fou ?
 					if(this.ech.getPieces()[xArr][yArr] == null) // Case libre ?
@@ -28,6 +30,9 @@ public class Roi extends Piece {
 					}
 				}
 		}
+		
+		
+		
 		
 		
 
@@ -602,24 +607,45 @@ public class Roi extends Piece {
 		
 	}
 	
-	public void roquer(Tour t) {
+	public void roquer(int yArr) { // Coup spécial consistant à mettre le roi à l'abri et à mettre la tour en jeu (si c'est possible)
 		if(this.coul == Couleur.BLANC) {
-			if((this.x == 7) && (this.y == 4)) {
-				if(t.getX() == 7) {
-					if((t.getY() == 0)) {
-						this.bougerPieceSurEchiquier(x, y, x, y - 2);
-						t.bougerPieceSurEchiquier(t.getX(), t.getY(), 
-								t.getX(), t.getY() + 3);
-					}
-					if((t.getY() == 7)) {
-						this.bougerPieceSurEchiquier(x, y, x, y + 2);
-						t.bougerPieceSurEchiquier(t.getX(), t.getY(), 
-								t.getX(), t.getY() - 2);
-					}
-				}
-
-				
+			if ((x == 7) && (yArr > y) && (this.ech.getPieces()[7][7] != null) && (this.ech.getPieces()[7][7] instanceof Tour)
+				&& (this.ech.getPieces()[7][7].getCoul() == this.coul) && (this.ech.getPieces()[x][y+1] == null)
+						&& (this.ech.getPieces()[x][y+2] == null)) {
+				// Si le roi part à droite , qu'il y a une tour alliée tout en bas à droite de l'échiquier
+				// Et qu'il n'y ait aucune pièce entre le roi et la tour
+				bougerPieceSurEchiquier(x, y, x, yArr); // Alors petit roque
+				this.ech.getPieces()[7][7].bougerPieceSurEchiquier(7, 7, 7, 5);
 			}
+			if ((x == 7) && (yArr < y) && (this.ech.getPieces()[7][0] != null) && (this.ech.getPieces()[7][0] instanceof Tour)
+					&& (this.ech.getPieces()[7][0].getCoul() == this.coul) && (this.ech.getPieces()[x][y-1] == null)
+							&& (this.ech.getPieces()[x][y-2] == null) && (this.ech.getPieces()[x][y-3] == null)) {
+					// Si le roi part à gauche , qu'il y a une tour alliée tout en bas à gauche de l'échiquier
+					// Et qu'il n'y ait aucune pièce entre le roi et la tour
+					bougerPieceSurEchiquier(x, y, x, yArr); // Alors grand roque
+					this.ech.getPieces()[7][0].bougerPieceSurEchiquier(7, 0, 7, 3);
+				}
+			
+			
+		}
+		if(this.coul == Couleur.NOIR) {
+			if ((x == 0) && (yArr > y) && (this.ech.getPieces()[0][7] != null) && (this.ech.getPieces()[0][7] instanceof Tour)
+				&& (this.ech.getPieces()[0][7].getCoul() == this.coul) && (this.ech.getPieces()[x][y+1] == null)
+						&& (this.ech.getPieces()[x][y+2] == null)) {
+				// Si le roi part à droite , qu'il y a une tour alliée tout en haut à droite de l'échiquier
+				// Et qu'il n'y ait aucune pièce entre le roi et la tour
+				bougerPieceSurEchiquier(x, y, x, yArr); // Alors petit roque
+				this.ech.getPieces()[0][7].bougerPieceSurEchiquier(0, 7, 0, 5);
+			}
+			if ((x == 0) && (yArr < y) && (this.ech.getPieces()[0][0] != null) && (this.ech.getPieces()[0][0] instanceof Tour)
+					&& (this.ech.getPieces()[0][0].getCoul() == this.coul) && (this.ech.getPieces()[x][y-1] == null)
+							&& (this.ech.getPieces()[x][y-2] == null) && (this.ech.getPieces()[x][y-3] == null)) {
+					// Si le roi part à gauche , qu'il y a une tour tout alliée en haut à gauche de l'échiquier
+					// Et qu'il n'y ait aucune pièce entre le roi et la tour
+					bougerPieceSurEchiquier(x, y, x, yArr); // Alors grand roque
+					this.ech.getPieces()[0][0].bougerPieceSurEchiquier(0, 0, 0, 3);
+				}
+			
 			
 		}
 	}
