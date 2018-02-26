@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import classes.Couleur;
@@ -27,6 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -62,8 +64,10 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         MenuItem menuCharge = new MenuItem("Charger la partie");
         MenuItem menuSauvegarde = new MenuItem("Sauvegarder la partie");
         MenuItem menuQuitter = new MenuItem("Quitter");
+        MenuItem menuSupprimer = new MenuItem("Supprimer une partie");
         menuFichier.getItems().add(menuCharge);
         menuFichier.getItems().add(menuSauvegarde);
+        menuFichier.getItems().add(menuSupprimer);
         menuFichier.getItems().add(separateur);
         menuFichier.getItems().add(menuQuitter);
         
@@ -110,8 +114,9 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    	if(view.getNbClics() % 2 == 0) {
 		    		view.setxDep((int) (me.getY() / EchiquierView.largeurCase));
 		    		view.setyDep((int) (me.getX() / EchiquierView.largeurCase));
-		    		view.getCases()[view.getxDep()][view.getyDep()].getFond().setStroke(Color.GREEN);
+		    		view.getCases()[view.getxDep()][view.getyDep()].getFond().setStroke(Color.BLACK);
 		    		view.getCases()[view.getxDep()][view.getyDep()].getFond().setStrokeWidth(5);
+		    		//view.montrerDeplacementsPossibles(ech, view.getxDep(), view.getyDep());
 		    	}
 		    	else {
 		    		view.setxArr((int) (me.getY() / EchiquierView.largeurCase));
@@ -243,6 +248,12 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    }
 
 		});
+        menuSupprimer.setOnAction(new EventHandler<ActionEvent>(){
+        	// Actions à effectuer si on presse le bouton "Charger"
+		    public void handle(ActionEvent ae){
+		    	supprimerPartie();
+		    }
+        });
         
         root.getChildren().add(view);
         root.getChildren().add(boutonAnnulation);
@@ -296,21 +307,37 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     public void chargerPartie(Echiquier ech , Pile p , Joueur j1 , Joueur j2) { /* Permet de charger le fichier comprenant
 		 * l'échiquier , la pile de coups et les joueurs */
     	
-    	TextInputDialog dialog = new TextInputDialog("");
+    	String repertoire = "sauvegardes";
+		String[] listeParties = null;
+		
+		File f = new File(repertoire);
+		if(f.isDirectory()) {
+			listeParties = f.list();
+			
+		}
+		
+		ArrayList<String> choices = new ArrayList<String>();
+		for (String s : listeParties)
+			choices.add(s);
+		
+    	
+    	ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
     	dialog.setTitle("Charger une partie");
     	//dialog.setHeaderText("Look, a Text Input Dialog");
-    	dialog.setContentText("Entrez le nom du fichier : ");
+    	dialog.setContentText("Choisissez la partie à charger :");
 
  
     	Optional<String> result = dialog.showAndWait();
     	if(result.isPresent()) {
     		ObjectInputStream flux;
-    		String nomFichier = "sauvegardes/" + result.get();
+    		String chemin = repertoire + "/" + result.get();
+    		
 			try {
+				
 				flux = new ObjectInputStream(
 						new BufferedInputStream(
 							new FileInputStream(
-								new File(nomFichier))));
+								new File(chemin))));
 				
 				Echiquier echACopier = (Echiquier) flux.readObject();
 				Pile pileACopier = (Pile) flux.readObject();
@@ -356,7 +383,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 				alert.setTitle("Erreur");
 				
 				
-				alert.setContentText("Le fichier \"" + nomFichier + "\" est introuvable.");
+				alert.setContentText("Le fichier \"" + chemin + "\" est introuvable.");
 
 				alert.showAndWait();
 				
@@ -371,6 +398,39 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     		
     }
     
+    public void supprimerPartie() { /* Permet de supprimer une partie */
+    	
+    	String repertoire = "sauvegardes";
+		String[] listeParties = null;
+		
+		File f = new File(repertoire);
+		if(f.isDirectory()) {
+			listeParties = f.list();
+			
+		}
+		
+		ArrayList<String> choices = new ArrayList<String>();
+		for (String s : listeParties)
+			choices.add(s);
+		
+    	
+    	ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+    	dialog.setTitle("Supprimer une partie");
+    	//dialog.setHeaderText("Look, a Text Input Dialog");
+    	dialog.setContentText("Choisissez la partie à effacer :");
+
+ 
+    	Optional<String> result = dialog.showAndWait();
+    	if(result.isPresent()) {
+    		String chemin = repertoire + "/" + result.get();
+    		
+			File fichierASuppr = new File(chemin);
+			fichierASuppr.delete();
+    	}
+    		
+    }
+
+
     public void afficherEchecEtMat() {
     	Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Echec et mat");

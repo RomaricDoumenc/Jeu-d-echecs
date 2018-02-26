@@ -16,7 +16,7 @@ public class Roi extends Piece {
 		int xDep = this.x;
 		int yDep = this.y;
 		
-		if((Math.abs(yDep-yArr) == 2) && (xDep-xArr == 0))
+		if((Math.abs(yDep-yArr) == 2) && (xDep-xArr == 0)) // Déplacement à l'horizontal de 2 cases ? (Tentative de roque)
 			this.roquer(yArr);
 		else if((Math.abs(xDep - xArr) == 0) || (Math.abs(xDep - xArr) == 1)) {
 			if((Math.abs(yDep - yArr) == 0) || (Math.abs(yDep - yArr) == 1))
@@ -607,7 +607,7 @@ public class Roi extends Piece {
 		
 	}
 	
-	public void roquer(int yArr) { // Coup spécial consistant à mettre le roi à l'abri et à mettre la tour en jeu (si c'est possible)
+	public void roquer(int yArr) { // Coup spécial consistant à mettre le roi à l'abri et à mettre la tour en jeu (si le coup est possible)
 		if(this.coul == Couleur.BLANC) {
 			if ((x == 7) && (yArr > y) && (this.ech.getPieces()[7][7] != null) && (this.ech.getPieces()[7][7] instanceof Tour)
 				&& (this.ech.getPieces()[7][7].getCoul() == this.coul) && (this.ech.getPieces()[x][y+1] == null)

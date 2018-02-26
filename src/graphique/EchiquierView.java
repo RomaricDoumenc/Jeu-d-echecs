@@ -248,7 +248,29 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		this.joueurActuel = joueurActuel;
 	}
 	
-	
+	/*public void montrerDeplacementsPossibles(Echiquier ech , int x , int y) {
+		// Montre les cases possibles en vert
+		Piece p = ech.getPieces()[x][y];
+		if (p != null) {
+			if(p instanceof Pion) {
+				if(p.getCoul() == Couleur.BLANC) {
+					int xPion = p.getX();
+					int yPion = p.getY();
+					if (ech.getPieces()[xPion-1][yPion] == null)
+						this.cases[xPion-1][yPion].getFond().setFill(Color.GREEN);
+					if ((ech.getPieces()[xPion-1][yPion] == null) && (ech.getPieces()[xPion-2][yPion] == null)
+						&& ((Pion) p).isDejaBouge() == false)
+						this.cases[xPion-2][yPion].getFond().setFill(Color.GREEN);
+					if ((ech.getPieces()[xPion-1][yPion+1] != null) && (ech.getPieces()[xPion-1][yPion+1].getCoul() != p.getCoul()))
+						this.cases[xPion-1][yPion+1].getFond().setFill(Color.RED);
+					if ((ech.getPieces()[xPion-1][yPion-1] != null) && (ech.getPieces()[xPion-1][yPion-1].getCoul() != p.getCoul()))
+						this.cases[xPion-1][yPion-1].getFond().setFill(Color.RED);
+				}
+				
+			}
+		}
+		
+	}*/
 	
 	
 	
