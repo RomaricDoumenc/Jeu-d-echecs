@@ -1,9 +1,11 @@
 package classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Joueur { // un joueur
+public class Joueur implements Serializable { // un joueur
 	
+	private static final long serialVersionUID = -620285235309779229L;
 	private String nom; // Nom du joueur
 	private Couleur coul; // Couleur des pièces du joueur
 	private ArrayList<Piece> pieces; // listes des pièces du joueur
@@ -48,7 +50,8 @@ public class Joueur { // un joueur
 	}
 	
 	public void ajouterPiece(Piece p) { // Ajoute une pièce à la liste des pièces du joueur.
-		
+		if(this.pieces.contains(p) == false)
+			this.pieces.add(p);
 	}
 	public void supprimerPiece(Piece p) { // Supprime une pièce à la liste des pièces du joueur.
 		if(this.pieces.contains(p))

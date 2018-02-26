@@ -1,6 +1,8 @@
 package classes;
 
 public class Fou extends Piece {
+	
+	private static final long serialVersionUID = -1629078007359932853L;
 
 	public Fou(int x, int y, Couleur coul, Echiquier ech, Joueur j) {
 		super(x, y, coul, ech, j);

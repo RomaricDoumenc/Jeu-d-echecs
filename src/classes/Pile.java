@@ -1,8 +1,11 @@
 package classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Pile { // Pile contenant l'ensemble des coups joués depuis le début de la partie.
+public class Pile implements Serializable { // Pile contenant l'ensemble des coups joués depuis le début de la partie.
+	
+	private static final long serialVersionUID = 7066916896549162520L;
 	
 	private ArrayList<Piece[][]> coups; // Liste des coups ( grilles qui représente l'échiquier à un état n donné de la partie.
 
@@ -30,7 +33,25 @@ public class Pile { // Pile contenant l'ensemble des coups joués depuis le début
 			this.coups.remove(dernierCoup);
 			ech.mettreAJourCoordonnesPieces();
 			ech.mettreAJourListeJoueurs();
+			
+			for(i=0 ; i<8 ; i++)
+				for(j=0 ; j<8 ; j++)
+					if(ech.getPieces()[i][j] != null)
+						if(ech.getPieces()[i][j] instanceof Pion) {
+							Pion p = (Pion) ech.getPieces()[i][j];
+							p.resetDejaBouge();
+						}
+							
 		}
+	}
+	
+	public static boolean coupsEgaux(Piece[][] c1 , Piece[][] c2) { // Indique si 2 coups sont egaux
+		int i,j;
+		for(i=0 ; i<8 ; i++)
+			for(j=0 ; j<8 ; j++)
+				if(c1[i][j] != c2[i][j])
+					return false;
+		return true;
 	}
 
 	public ArrayList<Piece[][]> getCoups() {

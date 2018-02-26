@@ -1,8 +1,11 @@
 package classes;
 
-public abstract class Piece { // Classe de base sur laquelle vont se baser les types des pièces 
+import java.io.Serializable;
+
+public abstract class Piece implements Serializable { // Classe de base sur laquelle vont se baser les types des pièces 
 							  // du jeu d'échecs.
 	
+	private static final long serialVersionUID = 1L;
 	protected int x; // Coordonnées de la pièce sur l'échiquier
 	protected int y; // x = ligne ; y = colonne
 	
@@ -22,9 +25,9 @@ public abstract class Piece { // Classe de base sur laquelle vont se baser les t
 
 	protected void bougerPieceSurEchiquier(int xDep , int yDep , int xArr , int yArr) {
 		// Met à jour l'échiquier en faisant bouger la pièce
-		this.ech.getPieces()[xArr][yArr] = this; // Placement du pion sur la case d'arrivée
+		this.ech.getPieces()[xArr][yArr] = this; // Placement de la pièce sur la case d'arrivée
 		this.ech.getPieces()[xDep][yDep] = null; // Vidange de la case d'origine
-		this.x = xArr; // Mise à jour de la position du pion
+		this.x = xArr; // Mise à jour de la position de la pièce
 		this.y = yArr;
 	}
 	

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Roi extends Piece {
 
+	private static final long serialVersionUID = 5111222205294729672L;
+
 	public Roi(int x, int y, Couleur coul, Echiquier ech, Joueur j) {
 		super(x, y, coul, ech, j);
 		// TODO Auto-generated constructor stub
@@ -14,7 +16,9 @@ public class Roi extends Piece {
 		int xDep = this.x;
 		int yDep = this.y;
 		
-		if((Math.abs(xDep - xArr) == 0) || (Math.abs(xDep - xArr) == 1))
+		if((Math.abs(yDep-yArr) == 2) && (xDep-xArr == 0)) // Déplacement à l'horizontal de 2 cases ? (Tentative de roque)
+			this.roquer(yArr);
+		else if((Math.abs(xDep - xArr) == 0) || (Math.abs(xDep - xArr) == 1)) {
 			if((Math.abs(yDep - yArr) == 0) || (Math.abs(yDep - yArr) == 1))
 				if (trajectoireLibre(xDep, yDep, xArr, yArr) == true) { // Pas de pièce sur la trajectoire du fou ?
 					if(this.ech.getPieces()[xArr][yArr] == null) // Case libre ?
@@ -25,6 +29,10 @@ public class Roi extends Piece {
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
 					}
 				}
+		}
+		
+		
+		
 		
 		
 
@@ -521,26 +529,25 @@ public class Roi extends Piece {
 																		ainsi que le roi lui-même */
 			Pile pile = new Pile(); // Pile pour mémoriser l'état de départ
 			pile.empiler(this.ech); // On mémorise l'état actuel (état initial)
-			for(i=0 ; i<8 ; i++) { // On cherche sur l'échiquier les pièces de même couleur que le roi (i.e. ses alliés)
+			for(i=0 ; i<8 ; i++) { // On cherche sur l'échiquier les pièces de même couleur que le roi (c.à.d ses alliés)
 				for(j=0 ; j<8 ; j++) {
 					if(this.ech.getPieces()[i][j] != null)
 						if(this.ech.getPieces()[i][j].coul == this.coul)
 							piecesAllies.add(this.ech.getPieces()[i][j]);
 				}
 			}
-			piecesAllies.add(this); // Ajout du roi lui-même dans ses pièces alliés
 			
 			for(Piece p : piecesAllies) { // Tester tous les mouvements possibles par le joueur mis en échec
 				for(i=0 ; i<8 ; i++) {
 					for(j=0 ; j<8 ; j++) {
-						p.seDeplacer(i, j);
-						if(this.estEnEchec() == false) {
+						p.seDeplacer(i, j); // On teste le mouvement
+						if(this.estEnEchec() == false) { // Si on trouve un déplacement qui ne met plus en échec le roi
 							pile.depiler(this.ech); // Retour à l'état initial
 							return false; // Pas d'échec et mat
 						}
-						else {
+						else { // Sinon
 							pile.depiler(this.ech); // Retour à l'état initial
-							pile.empiler(this.ech); // On mémorise de nouveau l'état initial
+							pile.empiler(this.ech); // On mémorise de nouveau l'état initial , passage à la situation suivante ou à la pièce alliée suivante
 						}
 							
 					}
@@ -548,13 +555,99 @@ public class Roi extends Piece {
 					
 			}
 			
-			return true;
+			return true; // Tous les mouvements testés ne peuvent palier l'échec du roi , le roi est échec et mat !
 			
 			
 		}
 		else
-			return false;
+			return false; // Le roi n'est pas en échec , il n'est donc pas échec et mat
 		
+	}
+	
+	public boolean estBloque() { // Indique si le roi est bloqué (c.à.d le roi ne peut se déplacer sans être mis en échec , et qu'il n'est pas en échec au départ)
+		if (this.estEnEchec() == false) {
+			
+			int i,j;
+			ArrayList<Piece> piecesAllies  = new ArrayList<Piece>(); /* Pièces alliés du roi mis en échec
+																		ainsi que le roi lui-même */
+			Pile pile = new Pile(); // Pile pour mémoriser l'état de départ
+			pile.empiler(this.ech); // On mémorise l'état actuel (état initial)
+			piecesAllies.add(this);
+			
+			int xDep = this.x;
+			int yDep = this.y;
+			
+			for(Piece p : piecesAllies) { // Tester tous les mouvements possibles par le roi
+				for(i=0 ; i<8 ; i++) {
+					for(j=0 ; j<8 ; j++) {
+						if((xDep != i) || (yDep != j)) { // On ne teste pas le déplacement sur lui-même
+							p.seDeplacer(i, j); // On teste le mouvement
+							if(this.estEnEchec() == false) { // Si on trouve un déplacement qui ne met plus en échec le roi
+								pile.depiler(this.ech); // Retour à l'état initial
+								return false; // Pas d'échec et mat
+							}
+							else { // Sinon
+								pile.depiler(this.ech); // Retour à l'état initial
+								pile.empiler(this.ech); // On mémorise de nouveau l'état initial , passage à la situation suivante ou à la pièce alliée suivante
+							}
+						}
+						
+							
+					}
+				}
+					
+			}
+			
+			return true; // Tous les mouvements testés ne peuvent palier l'échec du roi , le roi est bloqué			
+			
+		}
+		else
+			return false; // Le roi n'est pas en échec , il n'est donc pas échec et mat
+		
+		
+	}
+	
+	public void roquer(int yArr) { // Coup spécial consistant à mettre le roi à l'abri et à mettre la tour en jeu (si le coup est possible)
+		if(this.coul == Couleur.BLANC) {
+			if ((x == 7) && (yArr > y) && (this.ech.getPieces()[7][7] != null) && (this.ech.getPieces()[7][7] instanceof Tour)
+				&& (this.ech.getPieces()[7][7].getCoul() == this.coul) && (this.ech.getPieces()[x][y+1] == null)
+						&& (this.ech.getPieces()[x][y+2] == null)) {
+				// Si le roi part à droite , qu'il y a une tour alliée tout en bas à droite de l'échiquier
+				// Et qu'il n'y ait aucune pièce entre le roi et la tour
+				bougerPieceSurEchiquier(x, y, x, yArr); // Alors petit roque
+				this.ech.getPieces()[7][7].bougerPieceSurEchiquier(7, 7, 7, 5);
+			}
+			if ((x == 7) && (yArr < y) && (this.ech.getPieces()[7][0] != null) && (this.ech.getPieces()[7][0] instanceof Tour)
+					&& (this.ech.getPieces()[7][0].getCoul() == this.coul) && (this.ech.getPieces()[x][y-1] == null)
+							&& (this.ech.getPieces()[x][y-2] == null) && (this.ech.getPieces()[x][y-3] == null)) {
+					// Si le roi part à gauche , qu'il y a une tour alliée tout en bas à gauche de l'échiquier
+					// Et qu'il n'y ait aucune pièce entre le roi et la tour
+					bougerPieceSurEchiquier(x, y, x, yArr); // Alors grand roque
+					this.ech.getPieces()[7][0].bougerPieceSurEchiquier(7, 0, 7, 3);
+				}
+			
+			
+		}
+		if(this.coul == Couleur.NOIR) {
+			if ((x == 0) && (yArr > y) && (this.ech.getPieces()[0][7] != null) && (this.ech.getPieces()[0][7] instanceof Tour)
+				&& (this.ech.getPieces()[0][7].getCoul() == this.coul) && (this.ech.getPieces()[x][y+1] == null)
+						&& (this.ech.getPieces()[x][y+2] == null)) {
+				// Si le roi part à droite , qu'il y a une tour alliée tout en haut à droite de l'échiquier
+				// Et qu'il n'y ait aucune pièce entre le roi et la tour
+				bougerPieceSurEchiquier(x, y, x, yArr); // Alors petit roque
+				this.ech.getPieces()[0][7].bougerPieceSurEchiquier(0, 7, 0, 5);
+			}
+			if ((x == 0) && (yArr < y) && (this.ech.getPieces()[0][0] != null) && (this.ech.getPieces()[0][0] instanceof Tour)
+					&& (this.ech.getPieces()[0][0].getCoul() == this.coul) && (this.ech.getPieces()[x][y-1] == null)
+							&& (this.ech.getPieces()[x][y-2] == null) && (this.ech.getPieces()[x][y-3] == null)) {
+					// Si le roi part à gauche , qu'il y a une tour tout alliée en haut à gauche de l'échiquier
+					// Et qu'il n'y ait aucune pièce entre le roi et la tour
+					bougerPieceSurEchiquier(x, y, x, yArr); // Alors grand roque
+					this.ech.getPieces()[0][0].bougerPieceSurEchiquier(0, 0, 0, 3);
+				}
+			
+			
+		}
 	}
 
 }

@@ -1,6 +1,8 @@
 package classes;
 
-public enum Couleur { // Couleur servant à distinguer les pièces et les joueurs
+import java.io.Serializable;
+
+public enum Couleur implements Serializable { // Couleur servant à distinguer les pièces et les joueurs
 	
 	BLANC,
 	NOIR;
