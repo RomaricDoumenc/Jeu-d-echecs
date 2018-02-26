@@ -313,6 +313,13 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		File f = new File(repertoire);
 		if(f.isDirectory()) {
 			listeParties = f.list();
+			if(listeParties.length == 0) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Erreur");
+				alert.setContentText("Aucune partie sauvegardée. Impossible de charger une partie.");
+				alert.showAndWait();
+				return; // Annulation du chargement
+			}
 			
 		}
 		
@@ -406,6 +413,13 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		File f = new File(repertoire);
 		if(f.isDirectory()) {
 			listeParties = f.list();
+			if(listeParties.length == 0) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Erreur");
+				alert.setContentText("Aucune partie sauvegardée. Impossible de supprimer une partie.");
+				alert.showAndWait();
+				return; // Annulation du chargement
+			}
 			
 		}
 		
