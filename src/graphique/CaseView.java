@@ -8,11 +8,9 @@ import classes.Piece;
 import classes.Pion;
 import classes.Roi;
 import classes.Tour;
-import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -39,39 +37,39 @@ public class CaseView extends Parent {  // Représentation graphique d'une case d
 		if(p != null) { // Sélcetion de l'image à afficher en fonction de la pièce à afficher
 			if(p instanceof Pion) {
 				if(p.getCoul() == Couleur.BLANC)
-					image = new ImageView(new Image("file:images/pionBlanc.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/pionBlanc.png")));
 				else
-					image = new ImageView(new Image("file:images/pionNoir.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/pionNoir.png")));
 			}
 			if(p instanceof Cavalier) {
 				if(p.getCoul() == Couleur.BLANC)
-					image = new ImageView(new Image("file:images/cavalierBlanc.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/cavalierBlanc.png")));
 				else
-					image = new ImageView(new Image("file:images/cavalierNoir.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/cavalierNoir.png")));
 			}
 			if(p instanceof Fou) {
 				if(p.getCoul() == Couleur.BLANC)
-					image = new ImageView(new Image("file:images/fouBlanc.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/fouBlanc.png")));
 				else
-					image = new ImageView(new Image("file:images/fouNoir.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/fouNoir.png")));
 			}
 			if(p instanceof Roi) {
 				if(p.getCoul() == Couleur.BLANC)
-					image = new ImageView(new Image("file:images/roiBlanc.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/roiBlanc.png")));
 				else
-					image = new ImageView(new Image("file:images/roiNoir.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/roiNoir.png")));
 			}
 			if(p instanceof Dame) {
 				if(p.getCoul() == Couleur.BLANC)
-					image = new ImageView(new Image("file:images/dameBlanche.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/dameBlanche.png")));
 				else
-					image = new ImageView(new Image("file:images/dameNoire.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/dameNoire.png")));
 			}
 			if(p instanceof Tour) {
 				if(p.getCoul() == Couleur.BLANC)
-					image = new ImageView(new Image("file:images/tourBlanche.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/tourBlanche.png")));
 				else
-					image = new ImageView(new Image("file:images/tourNoire.png"));
+					image = new ImageView(new Image(getClass().getResourceAsStream("/images/tourNoire.png")));
 			}
 		}
 		

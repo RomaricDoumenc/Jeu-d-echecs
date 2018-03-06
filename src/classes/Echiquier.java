@@ -2,8 +2,7 @@ package classes;
 
 import java.io.Serializable;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+
 
 public class Echiquier implements Serializable { // Echiquier de 64 cases
 	
@@ -112,13 +111,8 @@ public class Echiquier implements Serializable { // Echiquier de 64 cases
 		if((nbCavaliersBlancs + nbCavaliersNoirs == 2) && (nbFousBlancs + nbFousNoirs == 0)) /* Roi + 2 Cavaliers contre Roi , impossible de mater
 		 																			 ou Roi + Cavalier contre Roi + Cavalier , impossible de mater */
 			return true;
-		if((nbCavaliersBlancs + nbCavaliersNoirs == 0) && (nbFousBlancs + nbFousNoirs == 2))
-			if((nbFousBlancs == 1) && (nbFousNoirs == 1))
-				return true; // Roi + Fou contre Roi + Fou , impossible de mater
-			else
-				return false; // On peut mater avec Roi + 2 Fous contre Roi , pas d'insuffisance matérielle
 		
-	return false; // Assez de matériel pour mater , pas d'insuffisance matérielle
+		return false; // Assez de matériel pour mater , pas d'insuffisance matérielle
 	}
 	
 	public boolean pat() { /* Y a-t-il pat ? (c.à.d que le joueur actuel ne peut pas bouger son roi sans le mettre en échec) , 
@@ -129,7 +123,7 @@ public class Echiquier implements Serializable { // Echiquier de 64 cases
 		for(i=0 ; i<8 ; i++)
 			for(j=0 ; j<8 ; j++) {
 				Piece p = pieces[i][j];
-				if((p != null) && (p instanceof Roi) && p.getCoul() == this.joueurActuel)
+				if((p != null) && (p instanceof Roi) && (p.getCoul() == this.joueurActuel))
 					roiActuel = (Roi) p;
 			}
 		if (roiActuel.estBloque() == true)

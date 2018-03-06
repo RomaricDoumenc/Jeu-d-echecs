@@ -21,7 +21,7 @@ public abstract class Piece implements Serializable { // Classe de base sur laqu
 		this.j = j;
 	}
 	
-	public abstract void seDeplacer(int xArr , int yArr); // Déplacer la pièce sur l'échiquier (si c'est possible)
+	public abstract boolean seDeplacer(int xArr , int yArr); // Déplacer la pièce sur l'échiquier (si c'est possible)
 
 	protected void bougerPieceSurEchiquier(int xDep , int yDep , int xArr , int yArr) {
 		// Met à jour l'échiquier en faisant bouger la pièce

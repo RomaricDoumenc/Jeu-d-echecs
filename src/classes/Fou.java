@@ -10,7 +10,7 @@ public class Fou extends Piece {
 	}
 
 	@Override
-		public void seDeplacer(int xArr, int yArr) {	/* Se déplace en diagonale */
+		public boolean seDeplacer(int xArr, int yArr) {	/* Se déplace en diagonale */
 		
 		int xDep = this.x;
 		int yDep = this.y;
@@ -19,18 +19,22 @@ public class Fou extends Piece {
 															 // deltaX = deltaY
 			if(Math.abs(xDep - xArr) > 0)
 				if (trajectoireLibre(xDep, yDep, xArr, yArr) == true) { // Pas de pièce sur la trajectoire du fou ?
-					if(this.ech.getPieces()[xArr][yArr] == null) // Case libre ?
+					if(this.ech.getPieces()[xArr][yArr] == null) { // Case libre ?
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr); // Déplacement sur cette case
+						return true;
+					}
 					else if(this.ech.getPieces()[xArr][yArr].getCoul() != this.coul) {
 						// Pièce adverse sur la case d'arrivée ?
 						capturerAdversaire(xArr, yArr);
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						return true;
 					}
 				}
 				
 			
 			
 		}
+		return false;
 
 	}
 

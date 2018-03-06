@@ -22,7 +22,6 @@ import classes.Roi;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -35,7 +34,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -53,7 +51,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Jeu d'échecs");
-        primaryStage.getIcons().add(new Image("file:images/roiBlanc.png"));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/roiBlanc.png")));
         
         
         final Menu menuFichier = new Menu("Fichier");
@@ -97,6 +95,8 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         
         EchiquierView view = new EchiquierView(80, 80 , ech); // Affichage de l'échiquier
         
+
+        
         Button boutonAnnulation = new Button("Annuler un coup"); // Bouton permettant d'annuler un ou plusieurs coups
         
         boutonAnnulation.setTranslateX(view.getPosX());
@@ -139,6 +139,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    				// Sinon mise à jour du joueur actuel
 		    			else {
 		    				ech.mettreAJourJoueurActuel();
+		    				view.animerPiece(view.getxDep(), view.getyDep(), view.getxArr(), view.getyArr(), ech);
 		    				int i;
 		    				for(i=0 ; i<8 ; i++) { /* Si un pion blanc se trouve sur la rangée tout en haut ou
 		    					                    * si un pion noir se trouve sur la rangée tout en bas
@@ -159,9 +160,9 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    				if(ech.insufficanceMaterielle() == true) {
     							System.out.println("Insufficance matérielle");
     						}
-		    				//if(ech.pat() == true) {
-		    				//	System.out.println("Pat");
-		    				//}
+		    				if(ech.pat() == true) {
+		    					System.out.println("Pat");
+		    				}
 		    				
 		    			}
 		    			
@@ -188,7 +189,8 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    			else
 		    				etat.setText("");
 		    		}
-		    		view.rafraichirAffichage(ech);
+		    		//view.rafraichirAffichage(ech);
+		    		view.animerPiece(view.getxDep(), view.getyDep(), view.getxArr(), view.getyArr() , ech);
 		    	}
 		        view.setNbClics(view.getNbClics() + 1);
 		        
@@ -283,7 +285,8 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     	if (result.isPresent()){ /* Si l'utilisateur a saisi le nom du fichier , alors création de ce fichier (s'il n'existe pas)
     								et sauvegarde des objets(échiquier , pièces , joueurs et pile) */
     		ObjectOutputStream flux;
-    		String nomFichier = "sauvegardes/" + result.get();
+    		getClass().getResource("sauvegardes");
+    		String nomFichier = "src/sauvegardes/" + result.get();
     		try {
     			flux = new ObjectOutputStream(
     					new BufferedOutputStream(
@@ -307,7 +310,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     public void chargerPartie(Echiquier ech , Pile p , Joueur j1 , Joueur j2) { /* Permet de charger le fichier comprenant
 		 * l'échiquier , la pile de coups et les joueurs */
     	
-    	String repertoire = "sauvegardes";
+    	String repertoire = "src/sauvegardes";
 		String[] listeParties = null;
 		
 		File f = new File(repertoire);
@@ -407,7 +410,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     
     public void supprimerPartie() { /* Permet de supprimer une partie */
     	
-    	String repertoire = "sauvegardes";
+    	String repertoire = "src/sauvegardes";
 		String[] listeParties = null;
 		
 		File f = new File(repertoire);
@@ -449,7 +452,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
     	Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Echec et mat");
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-		stage.getIcons().add(new Image("file:images/roiBlanc.png"));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/roiBlanc.png")));
 		alert.setContentText("Echec et mat !");
 
 		alert.showAndWait();

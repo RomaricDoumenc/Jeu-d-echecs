@@ -28,7 +28,7 @@ public class Pion extends Piece {
 	}
 
 	@Override
-	public void seDeplacer(int xArr, int yArr) { /* Se déplace à l'avant d'une case , capture 
+	public boolean seDeplacer(int xArr, int yArr) { /* Se déplace à l'avant d'une case , capture 
 												  * en diagonale , à l'avant et d'une case.
 												  * A sa position de départ , le pion peut se déplacer
 												  * soit de 1 , soit de 2 cases. */
@@ -41,6 +41,7 @@ public class Pion extends Piece {
 				if(this.ech.getPieces()[xArr][yArr] == null) { // Si oui , la case d'arrivée est-elle libre ?
 					if(this.ech.getPieces()[xDep - 1][yDep] == null) { // Y a t-il une pièce dans la trajectoire du pion ?
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						return true;
 					}
 					
 					
@@ -51,6 +52,7 @@ public class Pion extends Piece {
 			else if((yArr == yDep) && (xArr == xDep - 1)) { // Y a-t-il déplacement à l'avant d'une case ?
 				if(this.ech.getPieces()[xArr][yArr] == null) { // Si oui , la case d'arrivée est-elle libre ?
 					bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+					return true;
 				}				
 			}
 			
@@ -67,6 +69,7 @@ public class Pion extends Piece {
 						pieceASuppr.getJ().supprimerPiece(pieceASuppr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						return true;
 						
 						
 						
@@ -74,6 +77,7 @@ public class Pion extends Piece {
 						
 						
 				}
+			
 			}
 			
 			else if((yDep + 1 < 8)  && (xArr == xDep - 1) && (yArr == yDep + 1)) {
@@ -88,6 +92,7 @@ public class Pion extends Piece {
 						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						return true;
 						
 						
 						
@@ -104,6 +109,7 @@ public class Pion extends Piece {
 				if(this.ech.getPieces()[xArr][yArr] == null) { // Si oui , la case d'arrivée est-elle libre ?
 					if(this.ech.getPieces()[xDep + 1][yDep] == null) { // Y a t-il une pièce dans la trajectoire du pion ?
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						return true;
 					}
 					
 					
@@ -114,6 +120,7 @@ public class Pion extends Piece {
 			else if((yArr == yDep) && (xArr == xDep + 1)) { // Y a-t-il déplacement à l'avant d'une case ?
 				if(this.ech.getPieces()[xArr][yArr] == null) { // Si oui , la case d'arrivée est-elle libre ?
 					bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+					return true;
 				}				
 			}
 			
@@ -129,6 +136,7 @@ public class Pion extends Piece {
 						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						return true;
 						
 						
 						
@@ -150,6 +158,7 @@ public class Pion extends Piece {
 						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						return true;
 						
 						
 						
@@ -159,6 +168,8 @@ public class Pion extends Piece {
 				}
 			}
 		}
+		
+		return false;
 		
 		
 	}
@@ -191,7 +202,7 @@ public class Pion extends Piece {
 		
 		ChoiceDialog<String> dialog = new ChoiceDialog<>("Dame", choices);
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-		stage.getIcons().add(new Image("file:images/pionBlanc.png"));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/pionBlanc.png")));
 		
 		dialog.setTitle("Promotion");
 		dialog.setHeaderText("Vous avez amené votre pion jusqu'au bout de l'échiquier\net votre pion va se transformer en une autre pièce.");

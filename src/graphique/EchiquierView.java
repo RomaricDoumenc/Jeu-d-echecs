@@ -1,21 +1,16 @@
 package graphique;
 
-import classes.Cavalier;
-import classes.Couleur;
-import classes.Dame;
+
 import classes.Echiquier;
-import classes.Fou;
-import classes.Piece;
-import classes.Pion;
-import classes.Roi;
-import classes.Tour;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class EchiquierView extends Parent { // Représentation graphique d'un échiquier.
 	
@@ -131,12 +126,14 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		Color marron = new Color(0.655, 0.431, 0.216, 1);
 		Color clair = new Color(0.98, 0.827, 0.565, 1);
 		
+		
+		
 		for(i=0 ; i<8 ; i++)
 			for(j=0 ; j<8 ; j++)
 				this.getChildren().remove(cases[i][j]); // Supression des anciennes cases
 		
-		for(i=0 ; i<8 ; i++) { /* Ecrasement de toutes les cases par des nouvelles
-							    * car il est impossible de modifier les éléments à afficher de chaque case */
+		for(i=0 ; i<8 ; i++) { // Ecrasement de toutes les cases par des nouvelles
+							   // car il est impossible de modifier les éléments à afficher de chaque case 
 			if (i % 2 == 0) {
 				for(j=0 ; j<8 ; j++) { // Alternance case blanche/case noire sur les lignes paires 
 					if (j % 2 == 0)
@@ -248,6 +245,45 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		this.joueurActuel = joueurActuel;
 	}
 	
+	
+	public void animerPiece(int xDep , int yDep , int xArr , int yArr , Echiquier ech) {
+		
+		// Permet d'animer les pièces lorsqu'elles se déplacent ou lorsqu'elles sont capturées.
+		
+		ImageView image = cases[xDep][yDep].getImage();
+		if((image != null) && ((xDep != xArr) || (yDep != yArr))) {
+			// Translation de la case de départ à la case d'arrivée
+								
+			Duration duree = Duration.seconds(1);
+			TranslateTransition deplacement = new TranslateTransition();
+			deplacement.setDuration(duree);
+			deplacement.setNode(image);
+			deplacement.setToX(largeurCase * yArr);
+			deplacement.setToY(largeurCase * xArr);
+			
+			if(cases[xArr][yArr].getImage() != null) {
+				// Rétrécissement progressif de l'image de la pièce capturée jusqu'à sa disparition complète
+				ScaleTransition capture = new ScaleTransition();
+				capture.setDuration(duree);
+				capture.setNode(cases[xArr][yArr].getImage());
+				capture.setToX(0);
+				capture.setToY(0);
+				capture.play();
+			}
+			deplacement.play();
+			
+			
+	        
+			deplacement.setOnFinished((e) -> {
+				rafraichirAffichage(ech);
+			});
+			
+		}
+		else
+			rafraichirAffichage(ech);
+			
+		
+	}
 	/*public void montrerDeplacementsPossibles(Echiquier ech , int x , int y) {
 		// Montre les cases possibles en vert
 		Piece p = ech.getPieces()[x][y];
