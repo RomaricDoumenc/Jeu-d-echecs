@@ -17,7 +17,9 @@ public class Joueur implements Serializable { // un joueur
 		
 		if (coul == Couleur.BLANC) { // Initialisation des 16 pièces du joueur en fonction de sa couleur
 			int i;
-			for(i=0 ; i<8 ; i++) 
+			
+			
+			for(i=0 ; i<8 ; i++)
 				pieces.add(new Pion(6,i,coul,ech,this));
 			
 			pieces.add(new Tour(7,0,coul,ech,this));

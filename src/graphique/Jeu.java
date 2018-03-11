@@ -90,8 +90,19 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         j2.InitEchiquier(ech);
         
         
-        roiBlanc = (Roi) ech.getPieces()[7][4]; // Mémorisation des références des deux rois
-        roiNoir = (Roi) ech.getPieces()[0][4];
+        // Mémorisation des références des deux rois
+        for(Piece p : j1.getPieces()) {
+        	if(p instanceof Roi)
+        		 roiBlanc = (Roi) p;
+        }
+        for(Piece p : j2.getPieces()) {
+        	if(p instanceof Roi)
+        		 roiNoir = (Roi) p;
+        }
+        
+        
+        
+
         
         EchiquierView view = new EchiquierView(80, 80 , ech); // Affichage de l'échiquier
         
@@ -158,11 +169,10 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 			    					}
 		    				}
 		    				if(ech.insufficanceMaterielle() == true) {
-    							System.out.println("Insufficance matérielle");
+    							afficherNul("Insuffisance matérielle");
+    							ech.setJoueurActuel(null); // Plus de joueur actuel , déplacements de pièces désactivé
     						}
-		    				if(ech.pat() == true) {
-		    					System.out.println("Pat");
-		    				}
+		    				
 		    				
 		    			}
 		    			
@@ -185,6 +195,9 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    				etat.setText("Les blancs sont en échec !");
 		    			else if(roiNoir.estEnEchec())
 		    				etat.setText("Les noirs sont en échec !");
+		    			else if(ech.pat() == true) {
+	    					afficherNul("Pat");
+	    				}
 		    			
 		    			else
 		    				etat.setText("");
@@ -457,5 +470,17 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 
 		alert.showAndWait();
     }
+    public void afficherNul(String message) {
+    	Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Nul");
+		alert.setHeaderText("Nul");
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/roiBlanc.png")));
+		alert.setContentText(message);
+
+		alert.showAndWait();
+    }
+    
+    
 
 }

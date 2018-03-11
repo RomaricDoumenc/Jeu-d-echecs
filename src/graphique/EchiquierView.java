@@ -23,8 +23,8 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	
 	private Text joueurActuel; // Texte où est affiché le joueur actuel
 	
-	private Text[] numLigne; // Textes où seront affiché les numéros, de lignes (de 1 à 8 , de bas en haut)
-	private Text[] numColonne; // Textes où seront affiché les numéros, de lignes (de A à H , de gauche à droite)
+	private Text[] numLigne; // Textes où seront affichés les numéros, de lignes (de 1 à 8 , de bas en haut)
+	private Text[] numColonne; // Textes où seront affichés les numéros, de lignes (de A à H , de gauche à droite)
 	
 	private CaseView[][] cases; // Tableau comprenant les cases de l'échiquier
 	
@@ -262,7 +262,7 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 			deplacement.setToY(largeurCase * xArr);
 			
 			if(cases[xArr][yArr].getImage() != null) {
-				// Rétrécissement progressif de l'image de la pièce capturée jusqu'à sa disparition complète
+				// Rétrécissement progressif de l'image de la pièce capturée jusqu'à sa "disparition" complète
 				ScaleTransition capture = new ScaleTransition();
 				capture.setDuration(duree);
 				capture.setNode(cases[xArr][yArr].getImage());

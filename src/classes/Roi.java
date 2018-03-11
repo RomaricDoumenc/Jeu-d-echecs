@@ -584,7 +584,7 @@ public class Roi extends Piece {
 							// On teste le mouvement
 							if(p.seDeplacer(i, j) && this.estEnEchec() == false ) { // Si on trouve un déplacement qui ne met plus en échec le roi
 								pile.depiler(this.ech); // Retour à l'état initial
-								return false; // Pas d'échec et mat
+								return false; // Pas de blocage
 							}
 							else { // Sinon
 								pile.depiler(this.ech); // Retour à l'état initial
