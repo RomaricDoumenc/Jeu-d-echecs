@@ -73,7 +73,7 @@ public class CaseView extends Parent {  // Représentation graphique d'une case d
 			}
 		}
 		
-		this.getChildren().add(fond);
+		//this.getChildren().add(fond);
 		
 		if(this.image != null) { // Positionnement et affichage de l'image (s'il y a une pièce sur cette case)
 			this.image.setTranslateX(posX);

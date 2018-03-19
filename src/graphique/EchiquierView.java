@@ -2,9 +2,12 @@ package graphique;
 
 
 import classes.Echiquier;
+import classes.Roi;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Parent;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Shadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -22,6 +25,8 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	private int xDep,yDep,xArr,yArr; // Coordonnées des cases de départ et d'arrivée de la pièce qu'on veut déplacer
 	
 	private Text joueurActuel; // Texte où est affiché le joueur actuel
+	
+	private Rectangle[][] fonds;
 	
 	private Text[] numLigne; // Textes où seront affichés les numéros, de lignes (de 1 à 8 , de bas en haut)
 	private Text[] numColonne; // Textes où seront affichés les numéros, de lignes (de A à H , de gauche à droite)
@@ -72,6 +77,7 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		this.getChildren().add(joueurActuel);
 		
 		cases = new CaseView[8][8];
+		fonds = new Rectangle[8][8];
 		
 		// Couleur des cases de l'échiquier (marron et beige)
 		Color marron = new Color(0.655, 0.431, 0.216, 1);
@@ -80,23 +86,38 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		for(i=0 ; i<8 ; i++) { // Positionnement des cases de l'échiquier
 			if (i % 2 == 0) {
 				for(j=0 ; j<8 ; j++) { // Alternance case blanche/case noire sur les lignes paires 
-					if (j % 2 == 0)
+					if (j % 2 == 0) {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
 								ech.getPieces()[i][j]);
-					else
+						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
+						fonds[i][j].setFill(clair);
+					}
+					else {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron,
 								ech.getPieces()[i][j]);
+						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
+						fonds[i][j].setFill(marron);
+					}
+					this.getChildren().add(fonds[i][j]);
 					this.getChildren().add(cases[i][j]);
+					
 				}
 			}
 			else {
 				for(j=0 ; j<8 ; j++) { // Alternance case noire/case blanche sur les lignes impaires 
-					if (j % 2 == 1)
+					if (j % 2 == 1) {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
 								ech.getPieces()[i][j]);
-					else
+						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
+						fonds[i][j].setFill(clair);
+					}
+					else {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron ,
 								ech.getPieces()[i][j]);
+						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
+						fonds[i][j].setFill(marron);
+					}
+					this.getChildren().add(fonds[i][j]);
 					this.getChildren().add(cases[i][j]);
 				}
 			}
@@ -158,6 +179,21 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 			}
 			
 		}
+		for(i=0 ; i<8 ; i++) { 
+			for(j=0 ; j<8 ; j++) {
+				if(ech.getPieces()[i][j] instanceof Roi) { // On recherche les rois
+					Roi roi = (Roi) ech.getPieces()[i][j];
+					if(roi.estEnEchec() == true)  {
+						// Si un des 2 rois est en échec
+						cases[i][j].getImage().setEffect(new DropShadow(largeurCase/2, Color.RED)); // Alors apparition d'une ombre rouge autour de ce roi
+					}
+						
+				}
+			}
+		}
+		
+			
+		
 				
 	}
 

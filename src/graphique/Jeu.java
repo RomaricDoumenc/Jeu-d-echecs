@@ -22,10 +22,12 @@ import classes.Roi;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Menu;
@@ -36,13 +38,19 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Jeu extends Application { // Boucle principale où se déroulera la partie.
 	
 	public Roi roiBlanc; // Références des 2 rois de la partie
 	public Roi roiNoir;
+	Rectangle2D screenResolution = Screen.getPrimary().getVisualBounds(); // On prend la résolution d'écran de l'utilisateur
+
 
 	public static void main(String[] args) {
         Application.launch(Jeu.class, args);
@@ -71,12 +79,12 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         
        
         
-        
+        Stop[] stops = new Stop[] { new Stop(0, Color.WHITE),new Stop(1, Color.LIGHTBLUE)};
+        LinearGradient lg1 = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
         Group root = new Group();
-        Scene scene = new Scene(root, 800, 1000, Color.LIGHTBLUE);
+        Scene scene = new Scene(root, 800, 1000, lg1);
         
         menuBar.setMinWidth(scene.getWidth());
-        
         
         Echiquier ech = new Echiquier(); // Echiquier de la partie
         Joueur j1 = new Joueur("blanc", Couleur.BLANC, ech); // Joueurs de la partie
@@ -125,8 +133,8 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    	if(view.getNbClics() % 2 == 0) {
 		    		view.setxDep((int) (me.getY() / EchiquierView.largeurCase));
 		    		view.setyDep((int) (me.getX() / EchiquierView.largeurCase));
-		    		view.getCases()[view.getxDep()][view.getyDep()].getFond().setStroke(Color.BLACK);
-		    		view.getCases()[view.getxDep()][view.getyDep()].getFond().setStrokeWidth(5);
+		    		if(view.getCases()[view.getxDep()][view.getyDep()].getImage() != null)
+		    			view.getCases()[view.getxDep()][view.getyDep()].getImage().setEffect(new DropShadow(EchiquierView.largeurCase/2, Color.GREEN));
 		    		//view.montrerDeplacementsPossibles(ech, view.getxDep(), view.getyDep());
 		    	}
 		    	else {
@@ -170,7 +178,6 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    				}
 		    				if(ech.insufficanceMaterielle() == true) {
     							afficherNul("Insuffisance matérielle");
-    							ech.setJoueurActuel(null); // Plus de joueur actuel , déplacements de pièces désactivé
     						}
 		    				
 		    				
@@ -468,7 +475,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/roiBlanc.png")));
 		alert.setContentText("Echec et mat !");
 
-		alert.showAndWait();
+		alert.show();
     }
     public void afficherNul(String message) {
     	Alert alert = new Alert(AlertType.INFORMATION);
