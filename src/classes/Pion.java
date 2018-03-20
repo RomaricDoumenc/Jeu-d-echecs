@@ -12,6 +12,7 @@ public class Pion extends Piece {
 
 	private static final long serialVersionUID = -5803497094579220230L;
 	private boolean dejaBouge; // indique si le pion a déjà bougé (utile pour son 1er déplacement)
+	private boolean aBouge2cases; // indique si le pion a bougé de 2 cases (sert pour vérifier la prise en passant)
 	
 	public Pion(int x, int y, Couleur coul, Echiquier ech, Joueur j) {
 		super(x, y, coul, ech, j);
@@ -23,6 +24,7 @@ public class Pion extends Piece {
 		this.ech.getPieces()[xArr][yArr] = this; // Placement du pion sur la case d'arrivée
 		this.ech.getPieces()[xDep][yDep] = null; // Vidange de la case d'origine
 		this.dejaBouge = true; // Le pion a bougé
+		this.aBouge2cases = false;
 		this.x = xArr; // Mise à jour de la position du pion
 		this.y = yArr;
 	}
@@ -41,6 +43,7 @@ public class Pion extends Piece {
 				if(this.ech.getPieces()[xArr][yArr] == null) { // Si oui , la case d'arrivée est-elle libre ?
 					if(this.ech.getPieces()[xDep - 1][yDep] == null) { // Y a t-il une pièce dans la trajectoire du pion ?
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.aBouge2cases = true;
 						return true;
 					}
 					
@@ -52,6 +55,7 @@ public class Pion extends Piece {
 			else if((yArr == yDep) && (xArr == xDep - 1)) { // Y a-t-il déplacement à l'avant d'une case ?
 				if(this.ech.getPieces()[xArr][yArr] == null) { // Si oui , la case d'arrivée est-elle libre ?
 					bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+					this.aBouge2cases = false;
 					return true;
 				}				
 			}
@@ -69,13 +73,27 @@ public class Pion extends Piece {
 						pieceASuppr.getJ().supprimerPiece(pieceASuppr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.aBouge2cases = false;
 						return true;
 						
 						
 						
 					}
+					
 						
 						
+				}
+				else { // Y a-t-il prise en passant à gauche ?
+					if((this.ech.getPieces()[xDep][yDep-1] instanceof Pion)
+							&& (this.ech.getPieces()[xDep][yDep-1].getCoul() != this.coul)
+							&& (((Pion)this.ech.getPieces()[xDep][yDep-1]).isaBouge2cases() == true) && (xDep == 3)) {
+						capturerAdversaire(xDep, yDep-1);
+						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.ech.getPieces()[xDep][yDep-1] = null;
+						this.aBouge2cases = false;
+						return true;
+						
+					}
 				}
 			
 			}
@@ -92,6 +110,7 @@ public class Pion extends Piece {
 						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.aBouge2cases = false;
 						return true;
 						
 						
@@ -99,6 +118,18 @@ public class Pion extends Piece {
 					}
 						
 						
+				}
+				else { // Y a-t-il prise en passant à droite ?
+					if((this.ech.getPieces()[xDep][yDep+1] instanceof Pion)
+							&& (this.ech.getPieces()[xDep][yDep+1].getCoul() != this.coul)
+							&& (((Pion)this.ech.getPieces()[xDep][yDep+1]).isaBouge2cases() == true) && (xDep == 3)) {
+						capturerAdversaire(xDep, yDep+1);
+						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.ech.getPieces()[xDep][yDep+1] = null;
+						this.aBouge2cases = false;
+						return true;
+						
+					}
 				}
 			}
 		}
@@ -109,6 +140,7 @@ public class Pion extends Piece {
 				if(this.ech.getPieces()[xArr][yArr] == null) { // Si oui , la case d'arrivée est-elle libre ?
 					if(this.ech.getPieces()[xDep + 1][yDep] == null) { // Y a t-il une pièce dans la trajectoire du pion ?
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.aBouge2cases = true;
 						return true;
 					}
 					
@@ -120,6 +152,7 @@ public class Pion extends Piece {
 			else if((yArr == yDep) && (xArr == xDep + 1)) { // Y a-t-il déplacement à l'avant d'une case ?
 				if(this.ech.getPieces()[xArr][yArr] == null) { // Si oui , la case d'arrivée est-elle libre ?
 					bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+					this.aBouge2cases = false;
 					return true;
 				}				
 			}
@@ -136,6 +169,7 @@ public class Pion extends Piece {
 						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.aBouge2cases = false;
 						return true;
 						
 						
@@ -143,6 +177,18 @@ public class Pion extends Piece {
 					}
 						
 						
+				}
+				else { // Y a-t-il prise en passant à gauche ?
+					if((this.ech.getPieces()[xDep][yDep-1] instanceof Pion)
+							&& (this.ech.getPieces()[xDep][yDep-1].getCoul() != this.coul)
+							&& (((Pion)this.ech.getPieces()[xDep][yDep-1]).isaBouge2cases() == true) && (xDep == 4)) {
+						capturerAdversaire(xDep, yDep-1);
+						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.ech.getPieces()[xDep][yDep-1] = null;
+						this.aBouge2cases = false;
+						return true;
+						
+					}
 				}
 			}
 			
@@ -158,6 +204,7 @@ public class Pion extends Piece {
 						capturerAdversaire(xArr, yArr);
 						
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.aBouge2cases = false;
 						return true;
 						
 						
@@ -166,6 +213,19 @@ public class Pion extends Piece {
 						
 						
 				}
+				else { // Y a-t-il prise en passant à droite ?
+					if((this.ech.getPieces()[xDep][yDep+1] instanceof Pion)
+							&& (this.ech.getPieces()[xDep][yDep+1].getCoul() != this.coul)
+							&& (((Pion)this.ech.getPieces()[xDep][yDep+1]).isaBouge2cases() == true) && (xDep == 4)) {
+						capturerAdversaire(xDep, yDep+1);
+						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						this.ech.getPieces()[xDep][yDep+1] = null;
+						this.aBouge2cases = false;
+						return true;
+						
+					}
+				}
+				
 			}
 		}
 		
@@ -248,6 +308,16 @@ public class Pion extends Piece {
 
 	public void setaDejBouge(boolean DejaBouge) {
 		this.dejaBouge = DejaBouge;
+	}
+	
+	
+
+	public boolean isaBouge2cases() {
+		return aBouge2cases;
+	}
+
+	public void setaBouge2cases(boolean aBouge2cases) {
+		this.aBouge2cases = aBouge2cases;
 	}
 
 	@Override
