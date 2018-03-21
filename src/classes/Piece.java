@@ -64,6 +64,9 @@ public abstract class Piece implements Serializable { // Classe de base sur laqu
 										pile.depiler(this.ech); // Retour à l'état initial
 										return false; // Pas de blocage
 									}
+									else {
+										pile.depiler(this.ech); // Retour à l'état initial
+									}
 										
 							}
 							
