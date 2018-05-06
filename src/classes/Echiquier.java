@@ -92,7 +92,7 @@ public class Echiquier implements Serializable { // Echiquier de 64 cases
 						if(p.getCoul() == Couleur.BLANC)
 							nbFousBlancs++;
 						else
-							nbFousNoirs--;
+							nbFousNoirs++;
 					}
 					if(p instanceof Dame) { // On peut mater avec Roi + Dame , pas d'insuffisance matérielle
 						return false;
@@ -130,6 +130,9 @@ public class Echiquier implements Serializable { // Echiquier de 64 cases
 		return true;
 		
 	}
+	
+	
+	
 	
 	public void mettreAJourJoueurActuel() {
 		if (this.joueurActuel == Couleur.BLANC)

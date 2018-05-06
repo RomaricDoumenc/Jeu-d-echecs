@@ -6,8 +6,8 @@ import classes.Roi;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -16,6 +16,8 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class EchiquierView extends Parent { // Représentation graphique d'un échiquier.
+	
+	private Scene scene;
 	
 	private int posX; // Coordonnées de la case
 	private int posY;
@@ -38,9 +40,10 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 
 	
 	
-	public EchiquierView(int x , int y , Echiquier ech) { /* Initialisation de la vue de l'échiquier 
+	public EchiquierView(int x , int y , Echiquier ech , Scene s) { /* Initialisation de la vue de l'échiquier 
 										   * en fonction des coordonnées de départ passés en paramètre. */
 		int i,j;
+		this.scene = s;
 		this.nbClics = 0;
 		Rectangle fond = new Rectangle();
 		this.joueurActuel = new Text("Joueur actuel : "+ ech.getJoueurActuel().toString());
@@ -88,13 +91,13 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 				for(j=0 ; j<8 ; j++) { // Alternance case blanche/case noire sur les lignes paires 
 					if (j % 2 == 0) {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
 						fonds[i][j].setFill(clair);
 					}
 					else {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
 						fonds[i][j].setFill(marron);
 					}
@@ -107,13 +110,13 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 				for(j=0 ; j<8 ; j++) { // Alternance case noire/case blanche sur les lignes impaires 
 					if (j % 2 == 1) {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
 						fonds[i][j].setFill(clair);
 					}
 					else {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
 						fonds[i][j].setFill(marron);
 					}
@@ -159,10 +162,10 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 				for(j=0 ; j<8 ; j++) { // Alternance case blanche/case noire sur les lignes paires 
 					if (j % 2 == 0)
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 					else
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 					this.getChildren().add(cases[i][j]);
 				}
 			}
@@ -170,10 +173,10 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 				for(j=0 ; j<8 ; j++) { // Alternance case noire/case blanche sur les lignes impaires 
 					if (j % 2 == 1)
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 					else
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 					this.getChildren().add(cases[i][j]);
 				}
 			}

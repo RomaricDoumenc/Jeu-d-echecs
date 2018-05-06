@@ -8,7 +8,10 @@ import classes.Piece;
 import classes.Pion;
 import classes.Roi;
 import classes.Tour;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -22,7 +25,7 @@ public class CaseView extends Parent {  // Représentation graphique d'une case d
 	private ImageView image; // Image de fond de la case qui représentera la pièce
 	
 
-	public CaseView(int x , int y , Color coul , Piece p) { 
+	public CaseView(int x , int y , Color coul , Piece p , Scene scene) { 
 		fond = new Rectangle();
 		fond.setWidth(EchiquierView.largeurCase);
 		fond.setHeight(EchiquierView.largeurCase);
@@ -76,9 +79,19 @@ public class CaseView extends Parent {  // Représentation graphique d'une case d
 		//this.getChildren().add(fond);
 		
 		if(this.image != null) { // Positionnement et affichage de l'image (s'il y a une pièce sur cette case)
+			//this.image.setScaleX((double)EchiquierView.largeurCase/80);
+			//this.image.setScaleY((double)EchiquierView.largeurCase/80);
 			this.image.setTranslateX(posX);
 			this.image.setTranslateY(posY);
 			this.getChildren().add(image);
+			
+			this.image.setOnMouseEntered((e)-> {
+				scene.setCursor(Cursor.HAND);
+			});
+			
+			this.image.setOnMouseExited((e)->{
+				scene.setCursor(Cursor.DEFAULT);
+			});
 			
 		}
 

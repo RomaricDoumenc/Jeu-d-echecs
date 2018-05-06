@@ -653,7 +653,6 @@ public class Roi extends Piece {
 			
 			
 		}
-		System.out.println("Pas de dépl.");
 		return false;
 	}
 

@@ -71,16 +71,23 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         MenuItem menuSauvegarde = new MenuItem("Sauvegarder la partie");
         MenuItem menuQuitter = new MenuItem("Quitter");
         MenuItem menuSupprimer = new MenuItem("Supprimer une partie");
+        MenuItem menuReset = new MenuItem("Nouvelle partie");
+        MenuItem menuAlea = new MenuItem("Partie aléatoire");
         menuFichier.getItems().add(menuCharge);
         menuFichier.getItems().add(menuSauvegarde);
         menuFichier.getItems().add(menuSupprimer);
+        menuFichier.getItems().add(menuReset);
+        menuFichier.getItems().add(menuAlea);
         menuFichier.getItems().add(separateur);
         menuFichier.getItems().add(menuQuitter);
+        
         
        
         
         Stop[] stops = new Stop[] { new Stop(0, Color.WHITE),new Stop(1, Color.LIGHTBLUE)};
         LinearGradient lg1 = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
+        // Création d'un dégardé variant du blanc au bleu ciel
+        
         Group root = new Group();
         Scene scene = new Scene(root, 800, 1000, lg1);
         
@@ -112,7 +119,7 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         
 
         
-        EchiquierView view = new EchiquierView(80, 80 , ech); // Affichage de l'échiquier
+        EchiquierView view = new EchiquierView(80, 80 , ech , scene); // Affichage de l'échiquier
         
 
         
@@ -166,13 +173,13 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 		    					if ( (ech.getPieces()[0][i] != null) && (ech.getPieces()[0][i] instanceof Pion)
 		    						&& (ech.getPieces()[0][i].getCoul() == Couleur.BLANC) ) {
 		    						Pion p = (Pion) ech.getPieces()[0][i];
-		    						p.promouvoir();
+		    						p.promouvoir(pile);
 		    						view.rafraichirAffichage(ech);
 		    					}
 		    					if ( (ech.getPieces()[7][i] != null) && (ech.getPieces()[7][i] instanceof Pion)
 			    						&& (ech.getPieces()[7][i].getCoul() == Couleur.NOIR) ) {
 			    						Pion p = (Pion) ech.getPieces()[7][i];
-			    						p.promouvoir();
+			    						p.promouvoir(pile);
 			    						view.rafraichirAffichage(ech);
 			    					}
 		    				}
@@ -274,6 +281,46 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
         	// Actions à effectuer si on presse le bouton "Charger"
 		    public void handle(ActionEvent ae){
 		    	supprimerPartie();
+		    }
+        });
+        menuReset.setOnAction(new EventHandler<ActionEvent>(){
+        	// Actions à effectuer si on presse le bouton "Charger"
+		    public void handle(ActionEvent ae){
+		    	//resetPartie(ech, j1, j2, pile);
+		    	resetPartie(ech, j1, j2, pile);
+		    	view.rafraichirAffichage(ech);
+		    	for(Piece p : j1.getPieces()) { // Actualisation des références des 2 rois (blanc et noir)
+		    		if(p instanceof Roi)
+		    			roiBlanc = (Roi) p;
+		    	}
+		    	for(Piece p : j2.getPieces()) {
+		    		if(p instanceof Roi)
+		    			roiNoir = (Roi) p;
+		    	}
+		    	if(pile.getCoups().size() == 0)
+		    		boutonAnnulation.setDisable(true); // Désactivation du bouton si la pile est vide
+		    	else
+		    		boutonAnnulation.setDisable(false); // (Ré)activation du bouton si la pile n'est pas vide
+		    }
+        });
+        menuAlea.setOnAction(new EventHandler<ActionEvent>(){
+        	// Actions à effectuer si on presse le bouton "Charger"
+		    public void handle(ActionEvent ae){
+		    	//resetPartie(ech, j1, j2, pile);
+		    	partieAleatoire(ech, j1, j2, pile);
+		    	view.rafraichirAffichage(ech);
+		    	for(Piece p : j1.getPieces()) { // Actualisation des références des 2 rois (blanc et noir)
+		    		if(p instanceof Roi)
+		    			roiBlanc = (Roi) p;
+		    	}
+		    	for(Piece p : j2.getPieces()) {
+		    		if(p instanceof Roi)
+		    			roiNoir = (Roi) p;
+		    	}
+		    	if(pile.getCoups().size() == 0)
+		    		boutonAnnulation.setDisable(true); // Désactivation du bouton si la pile est vide
+		    	else
+		    		boutonAnnulation.setDisable(false); // (Ré)activation du bouton si la pile n'est pas vide
 		    }
         });
         
@@ -465,6 +512,128 @@ public class Jeu extends Application { // Boucle principale où se déroulera la p
 			fichierASuppr.delete();
     	}
     		
+    }
+    
+    public void partieAleatoire (Echiquier ech ,  Joueur j1  , Joueur j2 , Pile p) {
+    	// Génère une partie aléatoire de Chess960.
+    	resetPartie(ech, j1, j2, p);
+    	ech.setPieces(new Piece[8][8]);
+    	
+    	int i;
+    	for(i=0 ; i<8 ; i++) { // Position 0 à 7 dans les listes : les pions
+    		ech.getPieces()[6][i] = j1.getPieces().get(i);
+    		ech.getPieces()[1][i] = j2.getPieces().get(i);	
+    	}
+    	// Placement du 1er fou
+    	int y = ((int) (4 * Math.random())) * 2 + 1;
+    	ech.getPieces()[7][y] = j1.getPieces().get(12);
+    	ech.getPieces()[0][y] = j2.getPieces().get(12);
+    	
+    	// Placement du 2e fou
+    	y = ((int) (4 * Math.random())) * 2;
+    	ech.getPieces()[7][y] = j1.getPieces().get(13);
+    	ech.getPieces()[0][y] = j2.getPieces().get(13);
+    	
+    	// Placement des tours
+    	boolean placePourLeRoi = false;
+    	int y1 = (int) (8 * Math.random());
+    	int y2 = (int) (8 * Math.random());
+    	while((ech.getPieces()[0][y1] != null) || (ech.getPieces()[0][y2] != null) || (Math.abs(y2 - y1) < 2) || (placePourLeRoi == false)) {
+    		y1 = (int) (8 * Math.random());
+        	y2 = (int) (8 * Math.random());
+        	for(i=y1+1 ; i<y2 ; i++) {
+        		if(ech.getPieces()[0][i] == null)
+        			placePourLeRoi = true;
+        	}
+    	}
+    	ech.getPieces()[7][y1] = j1.getPieces().get(8);
+    	ech.getPieces()[7][y2] = j1.getPieces().get(9);
+    	ech.getPieces()[0][y1] = j2.getPieces().get(8);
+    	ech.getPieces()[0][y2] = j2.getPieces().get(9);
+    	
+    	// Placement du roi
+    	if(Math.abs(y2 - y1) == 2)
+    		y = (y1+y2)/2;
+    	else {
+    		if(y1 > y2) {
+    			int tampon = y1;
+    			y1 = y2;
+    			y2 = tampon;
+    		}
+    		y = (int) (Math.random() * (y2-y1-1)) + y1 + 1;
+    		while(ech.getPieces()[0][y] != null)
+    			y = (int) (Math.random() * (y2-y1-1)) + y1 + 1;
+    	}
+    	ech.getPieces()[7][y] = j1.getPieces().get(15);
+    	ech.getPieces()[0][y] = j2.getPieces().get(15);
+    	
+    	// Placement des cavaliers
+    	y = (int) (8 * Math.random());
+    	while(ech.getPieces()[0][y] != null)
+    		y = (int) (8 * Math.random());
+    	ech.getPieces()[7][y] = j1.getPieces().get(10);
+    	ech.getPieces()[0][y] = j2.getPieces().get(10);
+    	y = (int) (8 * Math.random());
+    	while(ech.getPieces()[0][y] != null)
+    		y = (int) (8 * Math.random());
+    	ech.getPieces()[7][y] = j1.getPieces().get(11);
+    	ech.getPieces()[0][y] = j2.getPieces().get(11);
+    	
+    	// Placement de la dame
+    	y = (int) (8 * Math.random());
+    	while(ech.getPieces()[0][y] != null)
+    		y = (int) (8 * Math.random());
+    	ech.getPieces()[7][y] = j1.getPieces().get(14);
+    	ech.getPieces()[0][y] = j2.getPieces().get(14);
+    	
+    	
+    	
+    	ech.mettreAJourCoordonnesPieces();
+    	
+    	
+    	
+    	
+    }
+    
+    public void resetPartie(Echiquier ech ,  Joueur j1  , Joueur j2 , Pile p) {
+    	Echiquier echACopier = new Echiquier();
+		Pile pileACopier = new Pile();
+		Joueur j1ACopier = new Joueur("blanc" , Couleur.BLANC , echACopier);
+		Joueur j2ACopier = new Joueur("noir" , Couleur.NOIR , echACopier);
+		j1ACopier.InitEchiquier(echACopier);
+		j2ACopier.InitEchiquier(echACopier);
+		
+		// Copie à la main des attributs des objets créés vers leurs emplacements de destination
+		ech.setPieces(echACopier.getPieces());
+		ech.setJoueurActuel(echACopier.getJoueurActuel());
+		
+		p.setCoups(pileACopier.getCoups());
+		
+		j1.setCoul(j1ACopier.getCoul());
+		j1.setNom(j1ACopier.getNom());
+		j1.setPieces(j1ACopier.getPieces());
+		
+		j2.setCoul(j2ACopier.getCoul());
+		j2.setNom(j2ACopier.getNom());
+		j2.setPieces(j2ACopier.getPieces());
+		
+		int i,j;
+		for(i=0 ; i<8 ; i++)
+			for(j=0 ; j<8 ; j++) { /* Mise à jour des joueurs et échiquier de chaque pièce
+									* car les références ont changé */
+				if(ech.getPieces()[i][j] != null) {
+					ech.getPieces()[i][j].setEch(ech);
+					if(ech.getPieces()[i][j].getCoul() == Couleur.BLANC)
+						ech.getPieces()[i][j].setJ(j1);
+					else
+						ech.getPieces()[i][j].setJ(j2);
+				}
+				
+			}
+				
+		
+		ech.mettreAJourCoordonnesPieces();
+		ech.mettreAJourListeJoueurs();
     }
 
 
