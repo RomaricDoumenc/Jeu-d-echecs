@@ -10,7 +10,7 @@ public class Cavalier extends Piece {
 	}
 
 	@Override
-	public void seDeplacer(int xArr, int yArr) { /* Se déplace en L , le cavalier peut sauter par-dessus
+	public boolean seDeplacer(int xArr, int yArr) { /* Se déplace en L , le cavalier peut sauter par-dessus
 												  * les autres pièces. */
 	
 		int xDep = this.x;
@@ -20,15 +20,20 @@ public class Cavalier extends Piece {
 		
 		if(((deltaX == 1) && (deltaY == 2)) || ((deltaX == 2) && (deltaY == 1))) {
 			if (trajectoireLibre(xDep, yDep, xArr, yArr) == true) { // Pas de pièce sur la trajectoire du fou ?
-				if(this.ech.getPieces()[xArr][yArr] == null) // Case libre ?
+				if(this.ech.getPieces()[xArr][yArr] == null) { // Case libre ?
 					bougerPieceSurEchiquier(xDep, yDep, xArr, yArr); // Déplacement sur cette case
+					return true;
+				}
 				else if(this.ech.getPieces()[xArr][yArr].getCoul() != this.coul) {
 					// Pièce adverse sur la case d'arrivée ?
 					capturerAdversaire(xArr, yArr);
 					bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+					return true;
 				}
 			}
 		}
+		
+		return false;
 		
 		
 		

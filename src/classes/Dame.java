@@ -10,7 +10,7 @@ public class Dame extends Piece {
 	}
 
 	@Override
-	public void seDeplacer(int xArr, int yArr) { /* Se déplace dans toutes les
+	public boolean seDeplacer(int xArr, int yArr) { /* Se déplace dans toutes les
 	 											  * directions d'un nombre illimité de cases. */
 		
 		int xDep = this.x;
@@ -19,15 +19,19 @@ public class Dame extends Piece {
 		if(((yDep == yArr) && (xDep != xArr)) || ((yDep != yArr) && (xDep == xArr)) || 
 				(Math.abs(xDep - xArr) == Math.abs(yDep - yArr))) {
 			if (trajectoireLibre(xDep, yDep, xArr, yArr) == true) { // Pas de pièce sur la trajectoire de la dame ?
-				if(this.ech.getPieces()[xArr][yArr] == null) // Case libre ?
+				if(this.ech.getPieces()[xArr][yArr] == null) { // Case libre ?
 					bougerPieceSurEchiquier(xDep, yDep, xArr, yArr); // Déplacement sur cette case
+					return true; 
+					}
 				else if(this.ech.getPieces()[xArr][yArr].getCoul() != this.coul) {
 					// Pièce adverse sur la case d'arrivée ?
 					capturerAdversaire(xArr, yArr);
 					bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+					return true;
 				}
 			}
 		}
+		return false;
 
 	}
 

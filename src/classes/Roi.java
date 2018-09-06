@@ -12,24 +12,30 @@ public class Roi extends Piece {
 	}
 
 	@Override
-	public void seDeplacer(int xArr, int yArr) {
+	public boolean seDeplacer(int xArr, int yArr) {
 		int xDep = this.x;
 		int yDep = this.y;
 		
 		if((Math.abs(yDep-yArr) == 2) && (xDep-xArr == 0)) // Déplacement à l'horizontal de 2 cases ? (Tentative de roque)
-			this.roquer(yArr);
+			return this.roquer(yArr);
 		else if((Math.abs(xDep - xArr) == 0) || (Math.abs(xDep - xArr) == 1)) {
 			if((Math.abs(yDep - yArr) == 0) || (Math.abs(yDep - yArr) == 1))
 				if (trajectoireLibre(xDep, yDep, xArr, yArr) == true) { // Pas de pièce sur la trajectoire du fou ?
-					if(this.ech.getPieces()[xArr][yArr] == null) // Case libre ?
+					if(this.ech.getPieces()[xArr][yArr] == null)  {
+						// Case libre ?
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr); // Déplacement sur cette case
+						return true;
+					}
+						
 					else if(this.ech.getPieces()[xArr][yArr].getCoul() != this.coul) {
 						// Pièce adverse sur la case d'arrivée ?
 						capturerAdversaire(xArr, yArr);
 						bougerPieceSurEchiquier(xDep, yDep, xArr, yArr);
+						return true;
 					}
 				}
 		}
+		return false;
 		
 		
 		
@@ -356,8 +362,6 @@ public class Roi extends Piece {
 	
 	private boolean estEnEchecParPion() {
 		
-		 int xRoi = this.x;
-		 int yRoi = this.y;
 		 
 		 if(this.coul == Couleur.BLANC) {
 			 if((x-1 >= 0) && (y-1 >= 0)) {
@@ -398,9 +402,7 @@ public class Roi extends Piece {
 	
 	private boolean estEnEchecParRoi() {
 		
-		int xRoi = this.x;
-		int yRoi = this.y;
-		
+
 		 if((x-1 >= 0) && (y-1 >= 0)) { // Vérifier en haut à gauche
 			 if(this.ech.getPieces()[x-1][y-1] != null)
 				 if(this.ech.getPieces()[x-1][y-1] instanceof Roi)
@@ -462,8 +464,6 @@ public class Roi extends Piece {
 
 	private boolean estEnEchecParCavalier() {
 		
-		int xRoi = this.x;
-		int yRoi = this.y;
 		
 		 if((x-1 >= 0) && (y-2 >= 0)) { // Vérifier en haut à gauche
 			 if(this.ech.getPieces()[x-1][y-2] != null)
@@ -581,10 +581,10 @@ public class Roi extends Piece {
 				for(i=0 ; i<8 ; i++) {
 					for(j=0 ; j<8 ; j++) {
 						if((xDep != i) || (yDep != j)) { // On ne teste pas le déplacement sur lui-même
-							p.seDeplacer(i, j); // On teste le mouvement
-							if(this.estEnEchec() == false) { // Si on trouve un déplacement qui ne met plus en échec le roi
+							// On teste le mouvement
+							if(p.seDeplacer(i, j) && this.estEnEchec() == false ) { // Si on trouve un déplacement qui ne met plus en échec le roi
 								pile.depiler(this.ech); // Retour à l'état initial
-								return false; // Pas d'échec et mat
+								return false; // Pas de blocage
 							}
 							else { // Sinon
 								pile.depiler(this.ech); // Retour à l'état initial
@@ -598,16 +598,17 @@ public class Roi extends Piece {
 					
 			}
 			
+			System.out.println("Roi bloqué");
 			return true; // Tous les mouvements testés ne peuvent palier l'échec du roi , le roi est bloqué			
 			
 		}
 		else
-			return false; // Le roi n'est pas en échec , il n'est donc pas échec et mat
+			return false; // Le roi n'est pas bloqué
 		
 		
 	}
 	
-	public void roquer(int yArr) { // Coup spécial consistant à mettre le roi à l'abri et à mettre la tour en jeu (si le coup est possible)
+	public boolean roquer(int yArr) { // Coup spécial consistant à mettre le roi à l'abri et à mettre la tour en jeu (si le coup est possible)
 		if(this.coul == Couleur.BLANC) {
 			if ((x == 7) && (yArr > y) && (this.ech.getPieces()[7][7] != null) && (this.ech.getPieces()[7][7] instanceof Tour)
 				&& (this.ech.getPieces()[7][7].getCoul() == this.coul) && (this.ech.getPieces()[x][y+1] == null)
@@ -616,6 +617,7 @@ public class Roi extends Piece {
 				// Et qu'il n'y ait aucune pièce entre le roi et la tour
 				bougerPieceSurEchiquier(x, y, x, yArr); // Alors petit roque
 				this.ech.getPieces()[7][7].bougerPieceSurEchiquier(7, 7, 7, 5);
+				return true;
 			}
 			if ((x == 7) && (yArr < y) && (this.ech.getPieces()[7][0] != null) && (this.ech.getPieces()[7][0] instanceof Tour)
 					&& (this.ech.getPieces()[7][0].getCoul() == this.coul) && (this.ech.getPieces()[x][y-1] == null)
@@ -624,6 +626,7 @@ public class Roi extends Piece {
 					// Et qu'il n'y ait aucune pièce entre le roi et la tour
 					bougerPieceSurEchiquier(x, y, x, yArr); // Alors grand roque
 					this.ech.getPieces()[7][0].bougerPieceSurEchiquier(7, 0, 7, 3);
+					return true;
 				}
 			
 			
@@ -636,6 +639,7 @@ public class Roi extends Piece {
 				// Et qu'il n'y ait aucune pièce entre le roi et la tour
 				bougerPieceSurEchiquier(x, y, x, yArr); // Alors petit roque
 				this.ech.getPieces()[0][7].bougerPieceSurEchiquier(0, 7, 0, 5);
+				return true;
 			}
 			if ((x == 0) && (yArr < y) && (this.ech.getPieces()[0][0] != null) && (this.ech.getPieces()[0][0] instanceof Tour)
 					&& (this.ech.getPieces()[0][0].getCoul() == this.coul) && (this.ech.getPieces()[x][y-1] == null)
@@ -644,10 +648,12 @@ public class Roi extends Piece {
 					// Et qu'il n'y ait aucune pièce entre le roi et la tour
 					bougerPieceSurEchiquier(x, y, x, yArr); // Alors grand roque
 					this.ech.getPieces()[0][0].bougerPieceSurEchiquier(0, 0, 0, 3);
+					return true;
 				}
 			
 			
 		}
+		return false;
 	}
 
 }

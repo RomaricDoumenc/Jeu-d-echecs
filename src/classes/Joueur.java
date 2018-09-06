@@ -17,7 +17,27 @@ public class Joueur implements Serializable { // un joueur
 		
 		if (coul == Couleur.BLANC) { // Initialisation des 16 pièces du joueur en fonction de sa couleur
 			int i;
-			for(i=0 ; i<8 ; i++) 
+			
+			/*pieces.add(new Pion(3,0,coul,ech,this));
+			pieces.add(new Pion(3,1,coul,ech,this));
+			pieces.add(new Pion(4,1,coul,ech,this));
+			pieces.add(new Pion(4,2,coul,ech,this));
+			pieces.add(new Pion(5,2,coul,ech,this));
+			pieces.add(new Pion(6,2,coul,ech,this));
+			pieces.add(new Pion(6,3,coul,ech,this));
+			pieces.add(new Pion(7,3,coul,ech,this));
+			
+			
+			pieces.add(new Tour(7,2,coul,ech,this));
+			pieces.add(new Tour(4,0,coul,ech,this));
+			pieces.add(new Cavalier(5, 1, coul, ech, this));
+			pieces.add(new Cavalier(6, 1, coul, ech, this));
+			pieces.add(new Fou(7,1,coul,ech,this));
+			pieces.add(new Fou(5,0,coul,ech,this));
+			pieces.add(new Dame(6,0,coul,ech,this));
+			pieces.add(new Roi(7,0,coul,ech,this));*/
+			
+			for(i=0 ; i<8 ; i++)
 				pieces.add(new Pion(6,i,coul,ech,this));
 			
 			pieces.add(new Tour(7,0,coul,ech,this));
@@ -31,6 +51,25 @@ public class Joueur implements Serializable { // un joueur
 		}
 		if (coul == Couleur.NOIR) {
 			int i;
+			/*pieces.add(new Pion(0,4,coul,ech,this));
+			pieces.add(new Pion(1,4,coul,ech,this));
+			pieces.add(new Pion(1,5,coul,ech,this));
+			pieces.add(new Pion(2,5,coul,ech,this));
+			pieces.add(new Pion(3,5,coul,ech,this));
+			pieces.add(new Pion(3,6,coul,ech,this));
+			pieces.add(new Pion(4,6,coul,ech,this));
+			pieces.add(new Pion(4,7,coul,ech,this));
+			
+			
+			pieces.add(new Tour(0,5,coul,ech,this));
+			pieces.add(new Tour(3,7,coul,ech,this));
+			pieces.add(new Cavalier(1, 6, coul, ech, this));
+			pieces.add(new Cavalier(2, 6, coul, ech, this));
+			pieces.add(new Fou(2,7,coul,ech,this));
+			pieces.add(new Fou(0,6,coul,ech,this));
+			pieces.add(new Dame(1,7,coul,ech,this));
+			pieces.add(new Roi(0,7,coul,ech,this));*/
+			
 			for(i=0 ; i<8 ; i++) 
 				pieces.add(new Pion(1,i,coul,ech,this));
 			
