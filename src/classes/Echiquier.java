@@ -2,8 +2,7 @@ package classes;
 
 import java.io.Serializable;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+
 
 public class Echiquier implements Serializable { // Echiquier de 64 cases
 	
@@ -93,7 +92,7 @@ public class Echiquier implements Serializable { // Echiquier de 64 cases
 						if(p.getCoul() == Couleur.BLANC)
 							nbFousBlancs++;
 						else
-							nbFousNoirs--;
+							nbFousNoirs++;
 					}
 					if(p instanceof Dame) { // On peut mater avec Roi + Dame , pas d'insuffisance matérielle
 						return false;
@@ -110,33 +109,30 @@ public class Echiquier implements Serializable { // Echiquier de 64 cases
 		if((nbCavaliersBlancs + nbCavaliersNoirs == 0) && (nbFousBlancs + nbFousNoirs == 1)) // Roi + Fou contre Roi , impossible de mater
 			return true;
 		if((nbCavaliersBlancs + nbCavaliersNoirs == 2) && (nbFousBlancs + nbFousNoirs == 0)) /* Roi + 2 Cavaliers contre Roi , impossible de mater
-		 																			 ou Roi + Cavalier contre Roi + Cavalier , impossible de mater */
+		 																		 ou Roi + Cavalier contre Roi + Cavalier , impossible de mater */
 			return true;
-		if((nbCavaliersBlancs + nbCavaliersNoirs == 0) && (nbFousBlancs + nbFousNoirs == 2))
-			if((nbFousBlancs == 1) && (nbFousNoirs == 1))
-				return true; // Roi + Fou contre Roi + Fou , impossible de mater
-			else
-				return false; // On peut mater avec Roi + 2 Fous contre Roi , pas d'insuffisance matérielle
 		
-	return false; // Assez de matériel pour mater , pas d'insuffisance matérielle
+		return false; // Assez de matériel pour mater , pas d'insuffisance matérielle
 	}
 	
 	public boolean pat() { /* Y a-t-il pat ? (c.à.d que le joueur actuel ne peut pas bouger son roi sans le mettre en échec) , 
 							* que son roi n'est pas en échec , et que toutes ses autres pièces sont bloquées ou capturées
 							* Autrement dit , que le joueur ne peut pas effectuer un déplacement autorisé) */
 		int i,j;
-		Roi roiActuel = null;
 		for(i=0 ; i<8 ; i++)
 			for(j=0 ; j<8 ; j++) {
 				Piece p = pieces[i][j];
-				if((p != null) && (p instanceof Roi) && p.getCoul() == this.joueurActuel)
-					roiActuel = (Roi) p;
+				if((p != null)  && (p.getCoul() == this.joueurActuel))
+					if(p.estBloque() == false)
+						return false;
 			}
-		if (roiActuel.estBloque() == true)
-			return true;
-		return false;
+		
+		return true;
 		
 	}
+	
+	
+	
 	
 	public void mettreAJourJoueurActuel() {
 		if (this.joueurActuel == Couleur.BLANC)

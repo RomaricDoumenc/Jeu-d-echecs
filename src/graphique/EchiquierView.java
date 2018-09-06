@@ -1,23 +1,23 @@
 package graphique;
 
-import classes.Cavalier;
-import classes.Couleur;
-import classes.Dame;
+
 import classes.Echiquier;
-import classes.Fou;
-import classes.Piece;
-import classes.Pion;
 import classes.Roi;
-import classes.Tour;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
+import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class EchiquierView extends Parent { // Représentation graphique d'un échiquier.
+	
+	private Scene scene;
 	
 	private int posX; // Coordonnées de la case
 	private int posY;
@@ -28,8 +28,10 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 	
 	private Text joueurActuel; // Texte où est affiché le joueur actuel
 	
-	private Text[] numLigne; // Textes où seront affiché les numéros, de lignes (de 1 à 8 , de bas en haut)
-	private Text[] numColonne; // Textes où seront affiché les numéros, de lignes (de A à H , de gauche à droite)
+	private Rectangle[][] fonds;
+	
+	private Text[] numLigne; // Textes où seront affichés les numéros, de lignes (de 1 à 8 , de bas en haut)
+	private Text[] numColonne; // Textes où seront affichés les numéros, de lignes (de A à H , de gauche à droite)
 	
 	private CaseView[][] cases; // Tableau comprenant les cases de l'échiquier
 	
@@ -38,9 +40,10 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 
 	
 	
-	public EchiquierView(int x , int y , Echiquier ech) { /* Initialisation de la vue de l'échiquier 
+	public EchiquierView(int x , int y , Echiquier ech , Scene s) { /* Initialisation de la vue de l'échiquier 
 										   * en fonction des coordonnées de départ passés en paramètre. */
 		int i,j;
+		this.scene = s;
 		this.nbClics = 0;
 		Rectangle fond = new Rectangle();
 		this.joueurActuel = new Text("Joueur actuel : "+ ech.getJoueurActuel().toString());
@@ -77,6 +80,7 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		this.getChildren().add(joueurActuel);
 		
 		cases = new CaseView[8][8];
+		fonds = new Rectangle[8][8];
 		
 		// Couleur des cases de l'échiquier (marron et beige)
 		Color marron = new Color(0.655, 0.431, 0.216, 1);
@@ -85,23 +89,38 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		for(i=0 ; i<8 ; i++) { // Positionnement des cases de l'échiquier
 			if (i % 2 == 0) {
 				for(j=0 ; j<8 ; j++) { // Alternance case blanche/case noire sur les lignes paires 
-					if (j % 2 == 0)
+					if (j % 2 == 0) {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
-								ech.getPieces()[i][j]);
-					else
+								ech.getPieces()[i][j] , scene);
+						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
+						fonds[i][j].setFill(clair);
+					}
+					else {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
+						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
+						fonds[i][j].setFill(marron);
+					}
+					this.getChildren().add(fonds[i][j]);
 					this.getChildren().add(cases[i][j]);
+					
 				}
 			}
 			else {
 				for(j=0 ; j<8 ; j++) { // Alternance case noire/case blanche sur les lignes impaires 
-					if (j % 2 == 1)
+					if (j % 2 == 1) {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
-								ech.getPieces()[i][j]);
-					else
+								ech.getPieces()[i][j] , scene);
+						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
+						fonds[i][j].setFill(clair);
+					}
+					else {
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
+						fonds[i][j] = new Rectangle(largeurCase * j, largeurCase * i, largeurCase, largeurCase);
+						fonds[i][j].setFill(marron);
+					}
+					this.getChildren().add(fonds[i][j]);
 					this.getChildren().add(cases[i][j]);
 				}
 			}
@@ -131,20 +150,22 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		Color marron = new Color(0.655, 0.431, 0.216, 1);
 		Color clair = new Color(0.98, 0.827, 0.565, 1);
 		
+		
+		
 		for(i=0 ; i<8 ; i++)
 			for(j=0 ; j<8 ; j++)
 				this.getChildren().remove(cases[i][j]); // Supression des anciennes cases
 		
-		for(i=0 ; i<8 ; i++) { /* Ecrasement de toutes les cases par des nouvelles
-							    * car il est impossible de modifier les éléments à afficher de chaque case */
+		for(i=0 ; i<8 ; i++) { // Ecrasement de toutes les cases par des nouvelles
+							   // car il est impossible de modifier les éléments à afficher de chaque case 
 			if (i % 2 == 0) {
 				for(j=0 ; j<8 ; j++) { // Alternance case blanche/case noire sur les lignes paires 
 					if (j % 2 == 0)
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 					else
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 					this.getChildren().add(cases[i][j]);
 				}
 			}
@@ -152,15 +173,30 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 				for(j=0 ; j<8 ; j++) { // Alternance case noire/case blanche sur les lignes impaires 
 					if (j % 2 == 1)
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, clair ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 					else
 						cases[i][j] = new CaseView(largeurCase * j, largeurCase * i, marron ,
-								ech.getPieces()[i][j]);
+								ech.getPieces()[i][j] , scene);
 					this.getChildren().add(cases[i][j]);
 				}
 			}
 			
 		}
+		for(i=0 ; i<8 ; i++) { 
+			for(j=0 ; j<8 ; j++) {
+				if(ech.getPieces()[i][j] instanceof Roi) { // On recherche les rois
+					Roi roi = (Roi) ech.getPieces()[i][j];
+					if(roi.estEnEchec() == true)  {
+						// Si un des 2 rois est en échec
+						cases[i][j].getImage().setEffect(new DropShadow(largeurCase/2, Color.RED)); // Alors apparition d'une ombre rouge autour de ce roi
+					}
+						
+				}
+			}
+		}
+		
+			
+		
 				
 	}
 
@@ -248,6 +284,45 @@ public class EchiquierView extends Parent { // Représentation graphique d'un éch
 		this.joueurActuel = joueurActuel;
 	}
 	
+	
+	public void animerPiece(int xDep , int yDep , int xArr , int yArr , Echiquier ech) {
+		
+		// Permet d'animer les pièces lorsqu'elles se déplacent ou lorsqu'elles sont capturées.
+		
+		ImageView image = cases[xDep][yDep].getImage();
+		if((image != null) && ((xDep != xArr) || (yDep != yArr))) {
+			// Translation de la case de départ à la case d'arrivée
+								
+			Duration duree = Duration.seconds(1);
+			TranslateTransition deplacement = new TranslateTransition();
+			deplacement.setDuration(duree);
+			deplacement.setNode(image);
+			deplacement.setToX(largeurCase * yArr);
+			deplacement.setToY(largeurCase * xArr);
+			
+			if(cases[xArr][yArr].getImage() != null) {
+				// Rétrécissement progressif de l'image de la pièce capturée jusqu'à sa "disparition" complète
+				ScaleTransition capture = new ScaleTransition();
+				capture.setDuration(duree);
+				capture.setNode(cases[xArr][yArr].getImage());
+				capture.setToX(0);
+				capture.setToY(0);
+				capture.play();
+			}
+			deplacement.play();
+			
+			
+	        
+			deplacement.setOnFinished((e) -> {
+				rafraichirAffichage(ech);
+			});
+			
+		}
+		else
+			rafraichirAffichage(ech);
+			
+		
+	}
 	/*public void montrerDeplacementsPossibles(Echiquier ech , int x , int y) {
 		// Montre les cases possibles en vert
 		Piece p = ech.getPieces()[x][y];
